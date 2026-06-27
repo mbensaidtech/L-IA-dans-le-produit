@@ -1,6 +1,6 @@
 # L'IA dans le produit : de l'appel LLM simple aux architectures multi-agents
  
-Présentation technique (~30 min) qui retrace, étape par étape, la montée en complexité des architectures d'IA dans un produit : du simple appel à un LLM jusqu'aux équipes d'agents orchestrées. Chaque partie ajoute une capacité par rapport à la précédente, avec des schémas animés et des cas d'usage concrets.
+Présentation technique (~35 min) qui retrace, étape par étape, la montée en complexité des architectures d'IA dans un produit : du simple appel à un LLM jusqu'aux équipes d'agents orchestrées. Chaque partie ajoute une capacité par rapport à la précédente, avec des schémas animés et des cas d'usage concrets.
  
 > Présentée par Mohammed BEN SAID — illustrée avec le Microsoft Agent Framework.
  
