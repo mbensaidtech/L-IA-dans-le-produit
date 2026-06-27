@@ -856,6 +856,103 @@ body.is-fullscreen .icon-btn .icon-fs-exit { display: block; }
    ───────────────────────────────────────────── */
 
 /* Compact header */
+/* ───────── SLIDE « Qu'est-ce qu'un agent IA ? » (data-slide="agent") ───────── */
+.slide[data-slide="agent"] { padding: 22px 56px 30px; }
+.slide[data-slide="agent"] .sag-header { margin-bottom: 3px; flex: none; }
+.sag-title { font-size: 40px; line-height: 1.05; letter-spacing: -0.02em; font-weight: 600; color: var(--ink); margin: 2px 0 7px; flex: none; }
+.sag-title em { font-style: normal; background: linear-gradient(135deg, var(--blue), var(--violet)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.sag-subtitle { font-size: 14.5px; line-height: 1.5; color: var(--ink-soft); max-width: 1080px; margin-bottom: 10px; flex: none; }
+.sag-subtitle strong { color: var(--ink); font-weight: 600; }
+.slide[data-slide="agent"] em { font-style: normal; }
+
+/* mise en page : une seule carte centrée occupant tout l'espace, avec flip 3D recto/verso */
+.sag-stage { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; perspective: 2200px; }
+.sag-flip { position: relative; width: 100%; max-width: 920px; height: 100%; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.45, 0.05, 0.2, 1); }
+.sag-stage.is-reasoning .sag-flip { transform: rotateY(180deg); }
+.sag-face { position: absolute; inset: 0; display: flex; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.sag-face-back { transform: rotateY(180deg); }
+.sag-diagram-card { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px 20px; overflow: visible; }
+.sag-svg { width: 100%; height: 100%; overflow: visible; }
+
+/* couleurs */
+.sag-brick[data-comp="llm"]          { --cc: var(--blue); }
+.sag-brick[data-comp="memoire"]      { --cc: var(--green); }
+.sag-brick[data-comp="instructions"] { --cc: var(--orange); }
+.sag-brick[data-comp="outils"]       { --cc: var(--violet); }
+.sag-brick[data-comp="agent"]        { --cc: var(--violet); }
+
+/* briques Lego */
+.sag-brick { cursor: pointer; outline: none; transform-box: fill-box; transform-origin: center; transition: transform 0.24s var(--ease-spring, var(--ease)); }
+.sag-brick.active { transform: scale(1.08); }
+.brick-body { fill: color-mix(in srgb, var(--cc) 16%, var(--bg-card)); stroke: color-mix(in srgb, var(--cc) 70%, var(--line)); stroke-width: 1.8; transition: fill 0.22s var(--ease), stroke 0.22s var(--ease), filter 0.22s var(--ease); }
+.brick-stud { fill: color-mix(in srgb, var(--cc) 30%, var(--bg-card)); stroke: color-mix(in srgb, var(--cc) 70%, var(--line)); stroke-width: 1.4; transition: fill 0.22s var(--ease); }
+.brick-label { fill: var(--ink); font-family: var(--font-ui); font-size: 14px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+.brick-sub { fill: var(--ink-mute); font-family: var(--font-mono); font-size: 10px; text-anchor: middle; dominant-baseline: middle; }
+.sag-ring { fill: none; stroke: var(--cc); stroke-width: 1.8; stroke-dasharray: 6 5; opacity: 0; transition: opacity 0.2s var(--ease); }
+.sag-brick:hover .brick-body { stroke: var(--cc); }
+.sag-brick.active .sag-ring { opacity: 0.9; animation: sagRingSpin 9s linear infinite; }
+.sag-brick.active .brick-body { stroke: var(--cc); fill: color-mix(in srgb, var(--cc) 28%, var(--bg-card)); filter: drop-shadow(0 0 11px color-mix(in srgb, var(--cc) 38%, transparent)); }
+.sag-brick.active .brick-stud { fill: color-mix(in srgb, var(--cc) 48%, var(--bg-card)); }
+@keyframes sagRingSpin { to { stroke-dashoffset: -44; } }
+
+/* brique centrale AGENT */
+.brick-agent-body { fill: url(#sagAgentGrad); stroke: color-mix(in srgb, var(--violet) 55%, var(--blue)); stroke-width: 2; transition: filter 0.22s var(--ease); }
+.brick-agent-stud { fill: rgba(255,255,255,0.28); stroke: rgba(255,255,255,0.4); }
+.brick-agent-label { fill: #fff; font-family: var(--font-ui); font-size: 21px; font-weight: 700; letter-spacing: 0.06em; text-anchor: middle; dominant-baseline: middle; }
+.brick-agent-sub { fill: rgba(255,255,255,0.82); font-family: var(--font-mono); font-size: 10.5px; text-anchor: middle; dominant-baseline: middle; }
+.sag-brick[data-comp="agent"]:hover .brick-agent-body,
+.sag-brick[data-comp="agent"].active .brick-agent-body { filter: drop-shadow(0 0 14px color-mix(in srgb, var(--violet) 50%, transparent)); }
+
+.sag-link { stroke: var(--line); stroke-width: 2; transition: stroke 0.22s var(--ease); }
+.sag-link.active { stroke: var(--cc, var(--blue)); stroke-width: 3; }
+
+/* caractéristique ReAct (bascule flip) */
+.sag-trait-row { display: flex; justify-content: center; margin-top: 12px; flex: none; }
+.sag-trait { display: flex; align-items: center; gap: 10px; width: 100%; max-width: 580px; padding: 11px 15px; border-radius: 12px; cursor: pointer; font: inherit; text-align: left;
+  background: var(--bg-card); border: 1px dashed color-mix(in srgb, #4dd0e1 55%, var(--line)); color: var(--ink-soft);
+  transition: background 0.22s var(--ease), border-color 0.22s var(--ease), box-shadow 0.22s var(--ease); }
+.sag-trait-ic { display: inline-flex; color: #4dd0e1; }
+.sag-trait-ic svg { width: 19px; height: 19px; }
+.sag-trait-tx { font-size: 13.5px; }
+.sag-trait b { color: #4dd0e1; font-weight: 600; }
+.sag-trait-hint { margin-left: auto; font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); white-space: nowrap; }
+.sag-trait:hover, .sag-trait.active { border-style: solid; border-color: #4dd0e1; background: color-mix(in srgb, #4dd0e1 11%, var(--bg-card)); box-shadow: 0 0 16px color-mix(in srgb, #4dd0e1 22%, transparent); }
+.sag-trait.active .sag-trait-ic { animation: sagSpin 2.4s linear infinite; }
+@keyframes sagSpin { to { transform: rotate(360deg); } }
+
+/* face arrière : schéma de la boucle ReAct (pleine carte) */
+.sag-react-card { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 6px; padding: 14px 20px 12px; }
+.sag-react-head { display: flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-ui); font-size: 17px; font-weight: 600; color: #4dd0e1; white-space: nowrap; flex: none; }
+.sag-react-ic { display: inline-flex; } .sag-react-ic svg { width: 19px; height: 19px; }
+.sag-react-canvas { flex: 1 1 0; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+.sag-react-svg { width: 100%; height: 100%; }
+.rm-box { fill: var(--bg-soft); stroke-width: 1.7; }
+.rm-box.obs { stroke: var(--blue); } .rm-lab.obs { fill: var(--blue); }
+.rm-box.th  { stroke: #4dd0e1; }    .rm-lab.th  { fill: #4dd0e1; }
+.rm-box.act { stroke: var(--violet); } .rm-lab.act { fill: var(--violet); }
+.rm-box.fin { stroke: var(--green); fill: color-mix(in srgb, var(--green) 10%, var(--bg-soft)); } .rm-lab.fin { fill: var(--green); }
+.rm-lab { font-family: var(--font-ui); font-size: 13px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+.rm-arrow { stroke: var(--ink-mute); stroke-width: 2; fill: none; stroke-dasharray: 7 5; }
+.rm-arrow.exit { stroke: var(--green); }
+.rm-elab { font-family: var(--font-mono); font-size: 9px; fill: var(--ink-faint); }
+.sag-react-cap { font-size: 12.5px; line-height: 1.45; color: var(--ink-mute); text-align: center; flex: none; }
+.sag-react-cap strong { color: var(--ink-soft); font-weight: 600; }
+/* animations (uniquement quand la face ReAct est visible) */
+@keyframes rmflow { to { stroke-dashoffset: -24; } }
+@keyframes rmpulse { 0%, 34%, 100% { stroke-width: 1.7; } 12% { stroke-width: 3.6; } }
+.sag-stage.is-reasoning .rm-arrow { animation: rmflow 0.8s linear infinite; }
+.sag-stage.is-reasoning .rm-box { animation: rmpulse 2.6s var(--ease) infinite; }
+.sag-stage.is-reasoning .rm-box.obs { animation-delay: 0s; }
+.sag-stage.is-reasoning .rm-box.th  { animation-delay: 0.55s; }
+.sag-stage.is-reasoning .rm-box.act { animation-delay: 1.1s; }
+.sag-stage.is-reasoning .rm-box.fin { animation-delay: 1.8s; }
+
+.sag-keys { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: center; margin-top: 12px; font-family: var(--font-mono); font-size: 11px; color: var(--ink-mute); flex: none; }
+.sag-key-item { display: inline-flex; align-items: center; }
+.sag-key-item b { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; margin-right: 7px; border: 1px solid var(--line); border-radius: 5px; background: var(--bg-soft); color: var(--ink-soft); font-weight: 700; }
+
+@media (max-width: 1100px) { .sag-title { font-size: 28px; } }
+
 .slide[data-slide="5"] { padding: 28px 56px 50px; }
 .slide[data-slide="5"] .slide5-header {
   display: flex;
@@ -1763,23 +1860,20 @@ body.is-fullscreen .icon-btn .icon-fs-exit { display: block; }
   position: absolute;
   inset: 0;
   display: flex;
+  gap: 2px;
   overflow: hidden;
   border-radius: 5px;
 }
 .s6-progress-seg {
   height: 100%;
+  flex: 1 1 0;
+  min-width: 0;
   background: var(--seg-color, var(--ink-faint));
   opacity: 0;
   transition: opacity 0.3s var(--ease);
   position: relative;
 }
-.s6-progress-seg::after {
-  content: '';
-  position: absolute;
-  right: 0; top: 0; bottom: 0;
-  width: 1px;
-  background: color-mix(in srgb, var(--bg-card) 60%, transparent);
-}
+.s6-progress-seg::after { display: none; }
 .s6-progress-seg:last-child::after { display: none; }
 .s6-progress-seg.done { opacity: 0.55; }
 .s6-progress-seg.current { opacity: 1; }
@@ -2231,6 +2325,15 @@ body.is-fullscreen .icon-btn .icon-fs-exit { display: block; }
 }
 .s8-reasons .reason.reject-r .tag { color: var(--red); }
 .s8-reasons .reason.accept-r .tag { color: var(--green); }
+.s8-crit { display: block; padding: 3px 0; color: var(--ink-soft); }
+.s8-crit-mark { font-weight: 700; }
+.s8-crit.ok .s8-crit-mark { color: var(--green); }
+.s8-crit.ko .s8-crit-mark { color: var(--red); }
+.s8-crit .s8-crit-state { font-weight: 600; }
+.s8-crit.ok .s8-crit-state { color: var(--green); }
+.s8-crit.ko .s8-crit-state { color: var(--red); }
+.s8-feedback { display: block; margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--line); color: var(--ink-soft); line-height: 1.5; }
+.s8-feedback-tag { display: block; color: var(--orange); font-weight: 600; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 3px; }
 
 /* Tries list */
 .s8-tries-list {
@@ -2309,6 +2412,154 @@ body.is-fullscreen .icon-btn .icon-fs-exit { display: block; }
    SLIDE 9 — MS AGENT FRAMEWORK: SEQUENTIAL
    ───────────────────────────────────────────── */
 
+/* ── slide juge : refonte multi-agents (Orchestrateur / Voyage / Juge) ── */
+.s8-stage { grid-template-columns: 1fr 320px; }
+#s8-diagram-svg .s8-band { stroke-width: 1; }
+#s8-diagram-svg .s8-band.orch   { fill: color-mix(in srgb, #0a84ff 7%, transparent);  stroke: color-mix(in srgb, #0a84ff 22%, transparent); }
+#s8-diagram-svg .s8-band.voyage { fill: color-mix(in srgb, #30d158 8%, transparent);  stroke: color-mix(in srgb, #30d158 22%, transparent); }
+#s8-diagram-svg .s8-band.juge   { fill: color-mix(in srgb, #f59e0b 8%, transparent);  stroke: color-mix(in srgb, #f59e0b 22%, transparent); }
+#s8-diagram-svg .s8x-user   { fill: var(--ink-soft); }
+#s8-diagram-svg .s8x-orch   { fill: #0a84ff; }
+#s8-diagram-svg .s8x-voyage { fill: #30d158; }
+#s8-diagram-svg .s8x-juge   { fill: #f59e0b; }
+#s8-diagram-svg .s8x-sub    { font-size: 8px; opacity: 0.85; }
+#s8-diagram-svg .s8x-box-orch   { stroke: color-mix(in srgb, #0a84ff 55%, var(--line)); }
+#s8-diagram-svg .s8x-box-voyage { stroke: color-mix(in srgb, #30d158 55%, var(--line)); }
+#s8-diagram-svg .s8x-box-juge   { stroke: color-mix(in srgb, #f59e0b 55%, var(--line)); }
+#s8-diagram-svg .s8x-act-orch   { fill: #0a84ff; }
+#s8-diagram-svg .s8x-act-voyage { fill: #30d158; }
+#s8-diagram-svg .s8x-act-juge   { fill: #f59e0b; }
+#s8-diagram-svg .s6-arrow.sys-orch, #s8-diagram-svg .s6-arrow.sys-final { stroke: #0a84ff; }
+#s8-diagram-svg .s6-arrow.sys-voyage { stroke: #30d158; }
+#s8-diagram-svg .s6-arrow.sys-juge   { stroke: #f59e0b; }
+#s8-diagram-svg .s6-arrow.sys-reject { stroke: var(--red); stroke-dasharray: 5 4; }
+#s8-diagram-svg .s6-arrow.sys-loop   { stroke: var(--red); stroke-dasharray: 5 4; }
+#s8-diagram-svg .s6-arrow.sys-accept { stroke: #f59e0b; }
+#s8-diagram-svg .s6-arrow.current.sys-orch, #s8-diagram-svg .s6-arrow.current.sys-final { filter: drop-shadow(0 0 5px color-mix(in srgb,#0a84ff 55%,transparent)); }
+#s8-diagram-svg .s6-arrow.current.sys-voyage { filter: drop-shadow(0 0 5px color-mix(in srgb,#30d158 55%,transparent)); }
+#s8-diagram-svg .s6-arrow.current.sys-juge   { filter: drop-shadow(0 0 5px color-mix(in srgb,#f59e0b 55%,transparent)); }
+#s8-diagram-svg .s6-arrow.current.sys-reject { filter: drop-shadow(0 0 6px color-mix(in srgb,var(--red) 60%,transparent)); }
+#s8-diagram-svg .s6-arrow.current.sys-loop   { filter: drop-shadow(0 0 6px color-mix(in srgb,var(--red) 60%,transparent)); }
+#s8-diagram-svg .s6-arrow.current.sys-accept { filter: drop-shadow(0 0 6px color-mix(in srgb,#f59e0b 60%,transparent)); }
+#s8-diagram-svg .s6-label.sys-orch .s6-label-bg, #s8-diagram-svg .s6-label.sys-final .s6-label-bg { stroke: color-mix(in srgb,#0a84ff 45%,var(--line)); }
+#s8-diagram-svg .s6-label.sys-voyage .s6-label-bg { stroke: color-mix(in srgb,#30d158 45%,var(--line)); }
+#s8-diagram-svg .s6-label.sys-juge .s6-label-bg   { stroke: color-mix(in srgb,#f59e0b 45%,var(--line)); }
+#s8-diagram-svg .s6-label.sys-reject .s6-label-bg { stroke: color-mix(in srgb,var(--red) 50%,var(--line)); }
+#s8-diagram-svg .s6-label.sys-loop .s6-label-bg   { stroke: color-mix(in srgb,var(--red) 50%,var(--line)); }
+#s8-diagram-svg .s6-label.sys-accept .s6-label-bg { stroke: color-mix(in srgb,#f59e0b 50%,var(--line)); }
+.s8-actors-card { background: var(--bg-card); border: 1px solid var(--line); border-radius: 12px; padding: 9px 12px 11px; }
+.s8-actor-row { display: grid; grid-template-columns: 14px 1fr; column-gap: 8px; align-items: baseline; margin-top: 7px; }
+.s8-dot { width: 10px; height: 10px; border-radius: 50%; align-self: start; margin-top: 3px; }
+.s8-dot.orch { background: #0a84ff; } .s8-dot.voyage { background: #30d158; } .s8-dot.juge { background: #f59e0b; }
+.s8-actor-name { font-size: 12px; font-weight: 600; color: var(--ink); }
+.s8-actor-name em { font-style: normal; font-weight: 500; color: var(--ink-mute); font-size: 11px; }
+.s8-actor-role { grid-column: 2; font-size: 10.5px; color: var(--ink-mute); margin-top: 1px; }
+
+.slide[data-slide="8"] .s6-memories { gap: 8px; overflow-y: auto; padding-right: 2px; }
+.slide[data-slide="8"] .s8-actors-card { padding: 8px 12px 9px; }
+.slide[data-slide="8"] .s8-actor-row { margin-top: 5px; }
+.slide[data-slide="8"] .s6-memories { gap: 6px; }
+.slide[data-slide="8"] .s8-draft-card, .slide[data-slide="8"] .s8-verdict-card, .slide[data-slide="8"] .s8-tries-card { padding: 9px 12px; }
+.slide[data-slide="8"] .s8-score { margin-bottom: 4px; }
+.slide[data-slide="8"] .s8-verdict-pill { padding: 4px 10px; }
+.slide[data-slide="8"] .s8-crit { padding: 2px 0; }
+.slide[data-slide="8"] .s8-actor-role { font-size: 10px; }
+/* ───────── SLIDE DE CLÔTURE : Questions ? + QR codes ───────── */
+.slide.closing { flex-direction: row; align-items: stretch; gap: 0; padding: 60px 76px; }
+.cl-left { flex: 0.92; display: flex; flex-direction: column; justify-content: center; padding-right: 54px; }
+.cl-left .eyebrow { margin-bottom: 10px; }
+.cl-q { font-size: 94px; line-height: 0.98; font-weight: 600; letter-spacing: -0.03em; margin: 0;
+  background: linear-gradient(135deg, var(--blue), var(--violet)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.cl-sub { font-size: 19px; line-height: 1.5; color: var(--ink-soft); margin: 20px 0 0; max-width: 380px; }
+.cl-sign { margin-top: 34px; display: flex; flex-direction: column; gap: 3px; padding-top: 20px; border-top: 1px solid var(--line-soft); max-width: 380px; }
+.cl-sign-name { font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: 0.01em; }
+.cl-sign-role { font-size: 13px; color: var(--ink-mute); }
+.cl-divider { width: 1px; align-self: stretch; margin: 24px 0; background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--ink) 16%, transparent), transparent); }
+.cl-right { flex: 1.06; display: flex; flex-direction: column; justify-content: center; gap: 22px; padding-left: 54px; }
+.cl-card { --c: var(--blue); display: flex; align-items: center; gap: 22px; text-decoration: none;
+  background: var(--bg-card); border: 1px solid var(--line); border-left: 4px solid var(--c); border-radius: 18px; padding: 18px 24px 18px 20px;
+  box-shadow: var(--shadow-card); transition: transform 0.25s var(--ease), border-color 0.25s var(--ease), box-shadow 0.25s var(--ease); }
+.cl-card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--c) 55%, var(--line)); box-shadow: 0 14px 40px color-mix(in srgb, var(--c) 20%, transparent); }
+.cl-card.medium   { --c: var(--blue); }
+.cl-card.linkedin { --c: var(--violet); }
+.cl-qr-tile { flex: none; width: 186px; height: 186px; background: #fff; border-radius: 14px; padding: 11px; box-shadow: 0 6px 20px rgba(0,0,0,0.20); }
+.qr-svg { width: 100%; height: 100%; display: block; }
+.cl-card-info { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.cl-card-head { display: flex; align-items: center; gap: 11px; }
+.cl-card-icon { color: var(--c); display: inline-flex; }
+.cl-card-icon .cl-ic { height: 26px; width: auto; }
+.cl-card.linkedin .cl-card-icon .cl-ic { height: 30px; }
+.cl-card-title { font-size: 18px; font-weight: 700; color: var(--c); letter-spacing: 0.01em; }
+.cl-card-text { font-size: 14.5px; line-height: 1.4; color: var(--ink); font-weight: 500; }
+.cl-card-scan { display: flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: 11px; color: var(--ink-mute); margin-top: 2px; }
+.cl-scan-ic { display: inline-flex; } .cl-scan-ic svg { width: 14px; height: 14px; }
+@media (max-width: 1180px) { .cl-q { font-size: 64px; } .cl-qr-tile { width: 150px; height: 150px; } }
+
+/* ───────── SLIDE FINALE : arbre de décision ───────── */
+.slide[data-slide="13"] { padding: 26px 56px 38px; }
+.dt-headwrap { margin-bottom: 2px; }
+.dt-title { font-size: 40px; line-height: 1.05; letter-spacing: -0.02em; font-weight: 600; color: var(--ink); margin: 2px 0 7px; }
+.dt-title em { font-style: normal; background: linear-gradient(135deg, var(--blue), var(--violet)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.dt-subtitle { font-size: 14.5px; line-height: 1.5; color: var(--ink-soft); max-width: 1080px; margin-bottom: 16px; }
+.dt-subtitle strong { color: var(--ink); font-weight: 600; }
+.dt-stage { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.dt-tree { width: 100%; max-width: 1140px; display: grid;
+  grid-template-columns: minmax(300px, 380px) 96px minmax(360px, 1fr);
+  grid-template-areas: "q1 y1 l1" "n1 .  ." "q2 y2 l2" "n2 .  ." "q3 y3 l3";
+  row-gap: 9px; column-gap: 6px; align-items: center; }
+.dt-q { display: flex; align-items: flex-start; gap: 11px; background: var(--bg-card); border: 1px solid var(--line); border-radius: 13px; padding: 12px 15px; box-shadow: var(--shadow-card); }
+.dt-q.dt-else { background: var(--bg-soft); border-style: dashed; }
+.dt-qnum { flex: none; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: #fff; background: linear-gradient(135deg, var(--blue), var(--violet)); }
+.dt-q.dt-else .dt-qnum { background: var(--ink-mute); }
+.dt-qt { font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.25; }
+.dt-qs { font-size: 12px; color: var(--ink-mute); line-height: 1.4; margin-top: 3px; }
+.dt-non { grid-area: n1; justify-self: start; margin-left: 26px; display: flex; align-items: center; gap: 9px; }
+.dt-arrow-down { width: 20px; height: 30px; }
+.dt-arrow-down line, .dt-arrow-down path { stroke: var(--ink-faint); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 4 4; }
+.dt-non-lbl { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--ink-mute); letter-spacing: 0.05em; }
+.dt-yes { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.dt-yes-lbl { font-family: var(--font-mono); font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: 0.05em; }
+.dt-arrow { width: 72px; height: 22px; }
+.dt-arrow line, .dt-arrow path { stroke: var(--green); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.dt-leaf { --c: var(--blue); background: var(--bg-card); border: 1px solid var(--line); border-left: 3px solid var(--c); border-radius: 13px; padding: 11px 16px 12px; box-shadow: var(--shadow-card); }
+.dt-leaf.llm   { --c: #4dd0e1; }
+.dt-leaf.agent { --c: #bf5af2; }
+.dt-leaf.multi { --c: #ff9f0a; }
+.dt-leaf-head { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.dt-leaf-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c); flex: none; }
+.dt-leaf-name { font-size: 16px; font-weight: 700; color: var(--c); }
+.dt-leaf-tag { font-size: 12.5px; color: var(--ink-soft); }
+.dt-adv { list-style: none; display: flex; flex-wrap: wrap; gap: 3px 18px; margin: 7px 0 0; padding: 0; }
+.dt-adv li { font-size: 12.5px; color: var(--ink-soft); position: relative; padding-left: 17px; }
+.dt-adv li::before { content: "\2713"; position: absolute; left: 0; color: var(--c); font-weight: 700; }
+.dt-ex { font-size: 11px; color: var(--ink-mute); font-family: var(--font-mono); margin-top: 7px; }
+.dt-ex.dt-warn { color: color-mix(in srgb, var(--orange) 80%, var(--ink-soft)); font-family: var(--font-ui); }
+@media (max-width: 1080px) { .dt-title { font-size: 30px; } .dt-tree { grid-template-columns: minmax(240px,320px) 70px 1fr; } }
+
+/* ── slide modérateur : couleurs par système (violet) + rouge = rejet uniquement ── */
+#s7-diagram-svg .s7-band.mod { fill: color-mix(in srgb, #bf5af2 7%, transparent); stroke: color-mix(in srgb, #bf5af2 22%, transparent); stroke-width: 1; }
+#s7-diagram-svg .s7x-user  { fill: var(--ink-soft); }
+#s7-diagram-svg .s7x-mod   { fill: #bf5af2; }
+#s7-diagram-svg .s7x-agent { fill: #0a84ff; }
+#s7-diagram-svg .s7x-sub   { font-size: 7.5px; opacity: 0.85; }
+#s7-diagram-svg .s7x-box-mod   { stroke: color-mix(in srgb, #bf5af2 55%, var(--line)); }
+#s7-diagram-svg .s7x-box-agent { stroke: color-mix(in srgb, #0a84ff 55%, var(--line)); }
+#s7-diagram-svg .s7x-act-mod   { fill: #bf5af2; }
+#s7-diagram-svg .s7x-act-agent { fill: #0a84ff; }
+#s7-diagram-svg .s6-arrow.sys-user  { stroke: var(--ink-mute); }
+#s7-diagram-svg .s6-arrow.sys-mod   { stroke: #bf5af2; }
+#s7-diagram-svg .s6-arrow.sys-reject{ stroke: var(--red); stroke-dasharray: 5 4; }
+#s7-diagram-svg .s6-arrow.sys-allow { stroke: var(--green); }
+#s7-diagram-svg .s6-arrow.current.sys-user  { filter: drop-shadow(0 0 5px color-mix(in srgb,var(--ink-mute) 60%,transparent)); }
+#s7-diagram-svg .s6-arrow.current.sys-mod   { filter: drop-shadow(0 0 5px color-mix(in srgb,#bf5af2 55%,transparent)); }
+#s7-diagram-svg .s6-arrow.current.sys-reject{ filter: drop-shadow(0 0 6px color-mix(in srgb,var(--red) 60%,transparent)); }
+#s7-diagram-svg .s6-arrow.current.sys-allow { filter: drop-shadow(0 0 6px color-mix(in srgb,var(--green) 60%,transparent)); }
+#s7-diagram-svg .s6-label.sys-mod .s6-label-bg    { stroke: color-mix(in srgb,#bf5af2 45%,var(--line)); }
+#s7-diagram-svg .s6-label.sys-reject .s6-label-bg { stroke: color-mix(in srgb,var(--red) 50%,var(--line)); }
+#s7-diagram-svg .s6-label.sys-allow .s6-label-bg  { stroke: color-mix(in srgb,var(--green) 50%,var(--line)); }
+#s7-progress-fill .s6-progress-seg[data-phase="user-msg"]   { --seg-color: var(--ink-mute); }
+#s7-progress-fill .s6-progress-seg[data-phase="req-llm-mod"] { --seg-color: #bf5af2; }
+#s7-progress-fill .s6-progress-seg[data-phase="res-llm-mod"] { --seg-color: #bf5af2; }
 .slide[data-slide="9"] { padding: 22px 40px 40px; }
 .slide[data-slide="9"] .slide9-header {
   display: flex;
@@ -3479,6 +3730,73 @@ body.notes-open .notes-panel {
   font-style: normal;
 }
 
+/* ── Panneau Script (texte de présentation) ── */
+body.script-open .stage { padding-right: 42vw; }
+.script-panel {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: 42vw; max-width: 640px;
+  background: var(--bg-elev);
+  border-left: 1px solid var(--line);
+  box-shadow: -24px 0 48px rgba(0, 0, 0, 0.3);
+  transform: translateX(100%);
+  transition: transform 0.5s var(--ease);
+  z-index: 50; display: flex; flex-direction: column; overflow: hidden;
+}
+body.script-open .script-panel { transform: translateX(0); }
+.script-header {
+  padding: 20px 28px; border-bottom: 1px solid var(--line-soft);
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+  background: color-mix(in srgb, var(--bg-elev) 94%, var(--violet));
+}
+.script-header-left { display: flex; flex-direction: column; gap: 2px; }
+.script-header-eyebrow {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.20em;
+  text-transform: uppercase; color: var(--violet); font-weight: 600;
+}
+.script-header-title {
+  font-family: var(--font-serif); font-size: 20px; font-style: normal;
+  color: var(--ink); letter-spacing: -0.01em; line-height: 1.2;
+}
+.script-close {
+  appearance: none; background: var(--bg-soft); border: 1px solid var(--line);
+  color: var(--ink-soft); width: 32px; height: 32px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+.script-close:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--ink); }
+.script-close svg { width: 14px; height: 14px; }
+.script-body {
+  flex: 1; overflow-y: auto; padding: 32px 36px 48px;
+  scrollbar-width: thin; scrollbar-color: var(--ink-faint) transparent;
+}
+.script-body::-webkit-scrollbar { width: 8px; }
+.script-body::-webkit-scrollbar-track { background: transparent; }
+.script-body::-webkit-scrollbar-thumb { background: var(--ink-faint); border-radius: 4px; }
+.script-body::-webkit-scrollbar-thumb:hover { background: var(--ink-mute); }
+.script-content { display: none; }
+.script-content.active { display: block; animation: notes-fade-in 0.4s var(--ease); }
+.script-line {
+  font-size: 16px; line-height: 1.78; color: var(--ink);
+  margin-bottom: 16px;
+}
+.script-line:first-child::before {
+  content: ''; display: block; width: 26px; height: 3px; border-radius: 2px;
+  background: var(--violet); margin-bottom: 16px; opacity: 0.8;
+}
+.script-line:last-child { margin-bottom: 0; }
+.script-cue {
+  font-family: var(--font-mono); font-size: 12px; line-height: 1.6;
+  color: var(--ink-mute); margin-bottom: 16px; padding: 9px 13px;
+  border-left: 2px solid color-mix(in srgb, var(--violet) 45%, var(--line));
+  background: color-mix(in srgb, var(--violet) 6%, transparent);
+  border-radius: 0 7px 7px 0;
+}
+.icon-btn.is-on {
+  color: var(--violet);
+  border-color: color-mix(in srgb, var(--violet) 42%, var(--line));
+  background: color-mix(in srgb, var(--violet) 12%, transparent);
+}
+
 /* Typography inside notes */
 .notes-section {
   margin-bottom: 28px;
@@ -3769,6 +4087,11 @@ body.notes-open .icon-btn#notes-btn {
       </div>
       <div class="divider"></div>
       <div class="header-actions">
+      <button class="icon-btn" id="script-btn" aria-label="Afficher le script de présentation" title="Script (S)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          <line x1="7" y1="9" x2="15" y2="9"/><line x1="7" y1="13" x2="12" y2="13"/></svg>
+      </button>
       <button class="icon-btn has-notes" id="notes-btn" aria-label="Afficher les notes" title="Notes (N)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -3848,6 +4171,10 @@ body.notes-open .icon-btn#notes-btn {
         <div class="s2-part-title">Approche agentique</div>
         <div class="s2-part-sub">Le LLM agit — seul d'abord, puis en équipe d'agents.</div>
         <div class="s2-items">
+          <div class="s2-item">
+            <span class="s2-item-marker"></span>
+            <span class="s2-item-tx"><span class="s2-item-name">Qu'est-ce qu'un agent ?</span><span class="s2-item-desc">cerveau, mémoire, instructions, outils — raisonne en autonomie (ReAct)</span></span>
+          </div>
           <div class="s2-item">
             <span class="s2-item-marker"></span>
             <span class="s2-item-tx"><span class="s2-item-name">Mono-agent · ReAct</span><span class="s2-item-desc">raisonner, agir, observer — en boucle</span></span>
@@ -4131,6 +4458,63 @@ body.notes-open .icon-btn#notes-btn {
     </section>
 
   <!-- ═════════════ SLIDE 5 : AGENT REACT (SEQUENCE DIAGRAM) ═════════════ -->
+  <section class="slide" data-slide="agent">
+    <div class="sag-header">
+      <div class="eyebrow">Partie 2 · Approche agentique</div>
+    </div>
+    <h1 class="sag-title">Qu'est-ce qu'un <em>agent IA</em> ?</h1>
+    <p class="sag-subtitle">Un agent IA est un <strong>système</strong> qui assemble plusieurs éléments — un <strong>cerveau</strong> (le LLM), une <strong>mémoire</strong>, des <strong>instructions</strong> (persona + objectif) et des <strong>outils</strong>. Sa caractéristique clé : il <strong>raisonne et agit en autonomie</strong>, selon le principe <strong>ReAct</strong>.</p>
+
+    <div class="sag-stage" id="sag-stage">
+      <div class="sag-flip" id="sag-flip">
+        <div class="sag-face sag-face-front">
+          <div class="s6-diagram-card sag-diagram-card">
+            <svg class="sag-svg" id="sag-svg" viewBox="0 0 628 452" preserveAspectRatio="xMidYMid meet"><defs><linearGradient id="sagAgentGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--blue)"/><stop offset="1" stop-color="var(--violet)"/></linearGradient></defs><g class="sag-links"><line class="sag-link" data-link="llm" x1="310" y1="189" x2="310" y2="101"/><line class="sag-link" data-link="outils" x1="310" y1="281" x2="310" y2="370"/><line class="sag-link" data-link="memoire" x1="212" y1="235" x2="191" y2="235"/><line class="sag-link" data-link="instructions" x1="408" y1="235" x2="421" y2="235"/></g><g class="sag-brick" data-comp="llm" tabindex="0" role="button" aria-label="Cerveau · LLM"><rect class="sag-ring" x="222" y="35" width="176" height="74" rx="14"/><circle class="brick-stud" cx="257" cy="43" r="6.5"/><circle class="brick-stud" cx="310" cy="43" r="6.5"/><circle class="brick-stud" cx="363" cy="43" r="6.5"/><rect class="brick-body" x="230" y="43" width="160" height="58" rx="9"/><text class="brick-label" x="310" y="72">Cerveau · LLM</text></g><g class="sag-brick" data-comp="memoire" tabindex="0" role="button" aria-label="Mémoire"><rect class="sag-ring" x="23" y="198" width="176" height="74" rx="14"/><circle class="brick-stud" cx="58" cy="206" r="6.5"/><circle class="brick-stud" cx="111" cy="206" r="6.5"/><circle class="brick-stud" cx="164" cy="206" r="6.5"/><rect class="brick-body" x="31" y="206" width="160" height="58" rx="9"/><text class="brick-label" x="111" y="235">Mémoire</text></g><g class="sag-brick" data-comp="instructions" tabindex="0" role="button" aria-label="Instructions"><rect class="sag-ring" x="413" y="198" width="194" height="74" rx="14"/><circle class="brick-stud" cx="451" cy="206" r="6.5"/><circle class="brick-stud" cx="510" cy="206" r="6.5"/><circle class="brick-stud" cx="569" cy="206" r="6.5"/><rect class="brick-body" x="421" y="206" width="178" height="58" rx="9"/><text class="brick-label" x="510" y="235">Instructions</text></g><g class="sag-brick" data-comp="outils" tabindex="0" role="button" aria-label="Outils"><rect class="sag-ring" x="222" y="362" width="176" height="74" rx="14"/><circle class="brick-stud" cx="257" cy="370" r="6.5"/><circle class="brick-stud" cx="310" cy="370" r="6.5"/><circle class="brick-stud" cx="363" cy="370" r="6.5"/><rect class="brick-body" x="230" y="370" width="160" height="58" rx="9"/><text class="brick-label" x="310" y="399">Outils</text></g><g class="sag-brick" data-comp="agent" tabindex="0" role="button" aria-label="AGENT"><rect class="sag-ring" x="204" y="181" width="212" height="108" rx="14"/><circle class="brick-stud brick-agent-stud" cx="236" cy="189" r="6.5"/><circle class="brick-stud brick-agent-stud" cx="286" cy="189" r="6.5"/><circle class="brick-stud brick-agent-stud" cx="334" cy="189" r="6.5"/><circle class="brick-stud brick-agent-stud" cx="384" cy="189" r="6.5"/><rect class="brick-body brick-agent-body" x="212" y="189" width="196" height="92" rx="9"/><text class="brick-label brick-agent-label" x="310" y="228">AGENT</text><text class="brick-sub brick-agent-sub" x="310" y="249">le système</text></g></svg>
+          </div>
+        </div>
+        <div class="sag-face sag-face-back">
+          <div class="s6-diagram-card sag-diagram-card sag-react-card">
+            <div class="sag-react-head"><span class="sag-react-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 4 21 10 15 10"/></svg></span>La boucle ReAct</div>
+            <div class="sag-react-canvas"><svg class="sag-react-svg" viewBox="0 0 380 268" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <marker id="rmah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink-mute)"/></marker>
+          <marker id="rmahg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--green)"/></marker>
+        </defs>
+        <path class="rm-arrow" d="M166 48 L208 48" marker-end="url(#rmah)"/>
+        <path class="rm-arrow" d="M252 70 L178 176" marker-end="url(#rmah)"/>
+        <path class="rm-arrow" d="M58 178 C 6 132 8 90 36 70" marker-end="url(#rmah)"/>
+        <path class="rm-arrow exit" d="M292 70 L292 176" marker-end="url(#rmahg)"/>
+        <text class="rm-elab" x="232" y="128">agir</text>
+        <text class="rm-elab" x="6" y="124">observer</text>
+        <text class="rm-elab" x="300" y="128">terminé</text>
+        <g><rect class="rm-box obs" x="26" y="26" width="140" height="44" rx="10"/><text class="rm-lab obs" x="96" y="48">Observation</text></g>
+        <g><rect class="rm-box th"  x="210" y="26" width="156" height="44" rx="10"/><text class="rm-lab th" x="288" y="48">Raisonnement</text></g>
+        <g><rect class="rm-box act" x="58" y="178" width="140" height="44" rx="10"/><text class="rm-lab act" x="128" y="200">Action</text></g>
+        <g><rect class="rm-box fin" x="216" y="178" width="150" height="44" rx="10"/><text class="rm-lab fin" x="291" y="200">Réponse finale</text></g>
+      </svg></div>
+            <p class="sag-react-cap"><strong>Observer → raisonner → agir</strong>, en boucle ; puis la <strong>réponse finale</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sag-trait-row">
+      <button class="sag-trait" id="sag-trait" type="button">
+        <span class="sag-trait-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 4 21 10 15 10"/></svg></span>
+        <span class="sag-trait-tx">Caractéristique — <b>raisonne &amp; agit en autonomie (ReAct)</b></span>
+        <span class="sag-trait-hint">R · retourner</span>
+      </button>
+    </div>
+
+    <div class="sag-keys reveal d2">
+      <span class="sag-key-item"><b>C</b> cerveau</span>
+      <span class="sag-key-item"><b>M</b> mémoire</span>
+      <span class="sag-key-item"><b>I</b> instructions</span>
+      <span class="sag-key-item"><b>O</b> outils</span>
+      <span class="sag-key-item"><b>R</b> raisonnement</span>
+    </div>
+  </section>
+
   <section class="slide" data-slide="5">
     <div class="slide5-header">
       <div class="eyebrow">Partie 2 · Approche agentique</div>
@@ -4205,7 +4589,7 @@ body.notes-open .icon-btn#notes-btn {
             <line class="seq-arrow req-llm"  id="arr-2" x1="285" y1="117" x2="475" y2="117" marker-end="url(#arr-blue)"/>
             <!-- Step 3: LLM → AGENT (tool suggestion 1) -->
             <line class="seq-arrow res-llm"  id="arr-3" x1="475" y1="149" x2="285" y2="149" marker-end="url(#arr-blue)"/>
-            <!-- Step 4: AGENT → TOOLS (execute search_web) -->
+            <!-- Step 4: AGENT → TOOLS (execute geocode_location) -->
             <line class="seq-arrow req-tool" id="arr-4" x1="285" y1="181" x2="675" y2="181" marker-end="url(#arr-violet)"/>
             <!-- Step 5: TOOLS → AGENT (result 1) -->
             <line class="seq-arrow res-tool" id="arr-5" x1="675" y1="213" x2="285" y2="213" marker-end="url(#arr-cyan)"/>
@@ -4236,12 +4620,12 @@ body.notes-open .icon-btn#notes-btn {
               <text class="seq-label-text" x="380" y="118" text-anchor="middle">tout le contexte</text>
             </g>
             <g class="seq-label res-llm" id="lbl-3">
-              <rect class="seq-label-bg" x="295" y="138" width="170" height="18" rx="6"/>
-              <text class="seq-label-text" x="380" y="150" text-anchor="middle">tool_use: search_web(...)</text>
+              <rect class="seq-label-bg" x="278" y="138" width="204" height="18" rx="6"/>
+              <text class="seq-label-text" x="380" y="150" text-anchor="middle">tool_use: geocode_location(...)</text>
             </g>
             <g class="seq-label req-tool" id="lbl-4">
               <rect class="seq-label-bg" x="370" y="170" width="220" height="18" rx="6"/>
-              <text class="seq-label-text" x="480" y="182" text-anchor="middle">search_web(query="météo Paris")</text>
+              <text class="seq-label-text" x="480" y="182" text-anchor="middle">geocode_location("Paris")</text>
             </g>
             <g class="seq-label res-tool" id="lbl-5">
               <rect class="seq-label-bg" x="370" y="202" width="220" height="18" rx="6"/>
@@ -4508,12 +4892,12 @@ body.notes-open .icon-btn#notes-btn {
               <text class="s6-label-text" x="275" y="125" text-anchor="middle">text: clarification?</text>
             </g>
             <g class="s6-label user-msg" id="s6-lbl-4">
-              <rect class="s6-label-bg" x="80" y="136" width="100" height="16" rx="5"/>
-              <text class="s6-label-text" x="130" y="147" text-anchor="middle">ask: durée?</text>
+              <rect class="s6-label-bg" x="66" y="136" width="128" height="16" rx="5"/>
+              <text class="s6-label-text" x="130" y="147" text-anchor="middle">ask: ville + durée ?</text>
             </g>
             <g class="s6-label user-msg" id="s6-lbl-5">
               <rect class="s6-label-bg" x="72" y="158" width="120" height="16" rx="5"/>
-              <text class="s6-label-text" x="132" y="169" text-anchor="middle">"Dev With AI · Bdx"</text>
+              <text class="s6-label-text" x="132" y="169" text-anchor="middle">"Dev With AI"</text>
             </g>
             <g class="s6-label req-llm" id="s6-lbl-6">
               <rect class="s6-label-bg" x="203" y="202" width="144" height="16" rx="5"/>
@@ -4528,8 +4912,8 @@ body.notes-open .icon-btn#notes-btn {
               <text class="s6-label-text" x="365" y="257" text-anchor="middle">get_calendar_event(...)</text>
             </g>
             <g class="s6-label res-tool" id="s6-lbl-9">
-              <rect class="s6-label-bg" x="280" y="268" width="170" height="16" rx="5"/>
-              <text class="s6-label-text" x="365" y="279" text-anchor="middle">{ city:Bdx, 15-17 mars }</text>
+              <rect class="s6-label-bg" x="262" y="268" width="206" height="16" rx="5"/>
+              <text class="s6-label-text" x="365" y="279" text-anchor="middle">{ event, ville, dates, participant }</text>
             </g>
             <g class="s6-label req-llm" id="s6-lbl-10">
               <rect class="s6-label-bg" x="203" y="290" width="144" height="16" rx="5"/>
@@ -4615,7 +4999,7 @@ body.notes-open .icon-btn#notes-btn {
               <div class="s6-mem-collection">MongoDB · sessions</div>
             </div>
           </div>
-          <div class="s6-mem-count"><strong id="s6-chat-count">0</strong> messages stockés</div>
+          <div class="s6-mem-count"><strong id="s6-chat-count">0</strong> messages stockés<span id="s6-chat-note" style="color:var(--ink-faint);font-size:11px"></span></div>
         </div>
 
         <div class="s6-mem-card s5-ctx-card s6-ctx-card" id="s6-ctx-card">
@@ -4692,138 +5076,20 @@ body.notes-open .icon-btn#notes-btn {
 
       <!-- LEFT — Sequence diagram with 8 lifelines -->
       <div class="s6-diagram-card">
-        <svg class="s6-diagram-svg" id="s7-diagram-svg" viewBox="0 0 800 380" preserveAspectRatio="xMidYMid meet">
+        <svg class="s6-diagram-svg" id="s7-diagram-svg" viewBox="0 0 680 410" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <marker id="s7-arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff9f0a"/>
-            </marker>
-            <marker id="s7-arr-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff453a"/>
-            </marker>
-            <marker id="s7-arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#30d158"/>
-            </marker>
+            <marker id="s7-arr-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--ink-mute)"/></marker>
+            <marker id="s7-arr-violet" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#bf5af2"/></marker>
+            <marker id="s7-arr-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ff453a"/></marker>
+            <marker id="s7-arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#30d158"/></marker>
           </defs>
-
-          <!-- ACTOR BOXES -->
-          <g>
-            <rect class="s6-actor-box user-actor" x="10" y="10" width="80" height="30" rx="8"/>
-            <text class="s6-actor-label user" x="50" y="29" text-anchor="middle">USER</text>
-
-            <rect class="s6-actor-box" x="135" y="10" width="80" height="30" rx="8"/>
-            <text class="s6-actor-label moderator" x="175" y="29" text-anchor="middle">MODERATOR</text>
-
-            <rect class="s6-actor-box" x="245" y="10" width="120" height="30" rx="8"/>
-            <text class="s6-actor-label llm-mod" x="305" y="22" text-anchor="middle">LLM</text>
-            <text class="s6-actor-label llm-mod" x="305" y="36" text-anchor="middle">(classifier)</text>
-
-            <rect class="s6-actor-box" x="395" y="10" width="80" height="30" rx="8"/>
-            <text class="s6-actor-label agent" x="435" y="29" text-anchor="middle">AGENT</text>
-
-            <!-- Faded downstream actors (not used in this rejection scenario) -->
-            <g opacity="0.35">
-              <rect class="s6-actor-box" x="500" y="10" width="80" height="30" rx="8"/>
-              <text class="s6-actor-label llm" x="540" y="29" text-anchor="middle">LLM</text>
-
-              <rect class="s6-actor-box" x="585" y="10" width="80" height="30" rx="8"/>
-              <text class="s6-actor-label calendar" x="625" y="29" text-anchor="middle">CALENDAR</text>
-
-              <rect class="s6-actor-box" x="670" y="10" width="80" height="30" rx="8"/>
-              <text class="s6-actor-label flight" x="710" y="22" text-anchor="middle">FLIGHT</text>
-              <text class="s6-actor-label flight" x="710" y="36" text-anchor="middle">AGENT</text>
-
-              <rect class="s6-actor-box" x="715" y="10" width="80" height="30" rx="8"/>
-              <text class="s6-actor-label hotel" x="755" y="22" text-anchor="middle">HOTEL</text>
-              <text class="s6-actor-label hotel" x="755" y="36" text-anchor="middle">AGENT</text>
-            </g>
-          </g>
-
-          <!-- LIFELINES -->
-          <line class="s6-lifeline" x1="50"  y1="46" x2="50"  y2="370"/>
-          <line class="s6-lifeline" x1="175" y1="46" x2="175" y2="370"/>
-          <line class="s6-lifeline" x1="305" y1="46" x2="305" y2="370"/>
-          <line class="s6-lifeline" x1="435" y1="46" x2="435" y2="370"/>
-          <line class="s6-lifeline" x1="540" y1="46" x2="540" y2="370" opacity="0.25"/>
-          <line class="s6-lifeline" x1="625" y1="46" x2="625" y2="370" opacity="0.25"/>
-          <line class="s6-lifeline" x1="710" y1="46" x2="710" y2="370" opacity="0.25"/>
-          <line class="s6-lifeline" x1="755" y1="46" x2="755" y2="370" opacity="0.25"/>
-
-          <!-- ACTIVATIONS -->
-          <g>
-            <!-- MODERATOR actif sur les deux tours -->
-            <rect class="s6-activation mod-act" id="s7-act-mod-1" x="170" y="62" width="10" height="105" rx="2"/>
-            <rect class="s6-activation mod-act" id="s7-act-mod-2" x="170" y="218" width="10" height="120" rx="2"/>
-            <!-- LLM_MOD actif sur les deux classifications -->
-            <rect class="s6-activation llm-mod-act" id="s7-act-llm-mod-1" x="300" y="88" width="10" height="46" rx="2"/>
-            <rect class="s6-activation llm-mod-act" id="s7-act-llm-mod-2" x="300" y="244" width="10" height="46" rx="2"/>
-            <!-- AGENT actif uniquement après ALLOW -->
-            <rect class="s6-activation agent-act" id="s7-act-agent" x="430" y="318" width="10" height="34" rx="2"/>
-          </g>
-
-          <!-- ARROWS — 8 steps -->
-          <g>
-            <!-- Step 1: USER → MODERATOR (1st request, out of scope) -->
-            <line class="s6-arrow user-msg" id="s7-arr-1" x1="50"  y1="78"  x2="170" y2="78"  marker-end="url(#s7-arr-orange)"/>
-            <!-- Step 2: MODERATOR → LLM_MOD (classify) -->
-            <line class="s6-arrow req-llm-mod" id="s7-arr-2" x1="180" y1="102" x2="300" y2="102" marker-end="url(#s7-arr-red)"/>
-            <!-- Step 3: LLM_MOD → MODERATOR (DENY) -->
-            <line class="s6-arrow res-llm-mod" id="s7-arr-3" x1="300" y1="126" x2="180" y2="126" marker-end="url(#s7-arr-red)"/>
-            <!-- Step 4: MODERATOR → USER (rejection) -->
-            <line class="s6-arrow rejected" id="s7-arr-4" x1="170" y1="156" x2="55"  y2="156" marker-end="url(#s7-arr-red)"/>
-
-            <!-- Visual gap (180-220) — like a "new turn" -->
-
-            <!-- Step 5: USER → MODERATOR (2nd request, legitimate) -->
-            <line class="s6-arrow user-msg" id="s7-arr-5" x1="50"  y1="234" x2="170" y2="234" marker-end="url(#s7-arr-orange)"/>
-            <!-- Step 6: MODERATOR → LLM_MOD (classify again) -->
-            <line class="s6-arrow req-llm-mod" id="s7-arr-6" x1="180" y1="258" x2="300" y2="258" marker-end="url(#s7-arr-red)"/>
-            <!-- Step 7: LLM_MOD → MODERATOR (ALLOW) -->
-            <line class="s6-arrow res-llm-mod" id="s7-arr-7" x1="300" y1="282" x2="180" y2="282" marker-end="url(#s7-arr-red)"/>
-            <!-- Step 8: MODERATOR → AGENT (forwarded — green) -->
-            <line class="s6-arrow allowed" id="s7-arr-8" x1="180" y1="334" x2="430" y2="334" marker-end="url(#s7-arr-green)"/>
-          </g>
-
-          <!-- ARROW LABELS -->
-          <g>
-            <g class="s6-label user-msg" id="s7-lbl-1">
-              <rect class="s6-label-bg" x="80" y="68" width="62" height="16" rx="5"/>
-              <text class="s6-label-text" x="111" y="79" text-anchor="middle">request_1</text>
-            </g>
-            <g class="s6-label req-llm-mod" id="s7-lbl-2">
-              <rect class="s6-label-bg" x="190" y="92" width="100" height="16" rx="5"/>
-              <text class="s6-label-text" x="240" y="103" text-anchor="middle">[sys_filter+msg]</text>
-            </g>
-            <g class="s6-label res-llm-mod" id="s7-lbl-3">
-              <rect class="s6-label-bg" x="195" y="116" width="100" height="16" rx="5"/>
-              <text class="s6-label-text" x="245" y="127" text-anchor="middle">decision: DENY</text>
-            </g>
-            <g class="s6-label rejected" id="s7-lbl-4">
-              <rect class="s6-label-bg" x="62" y="146" width="100" height="16" rx="5"/>
-              <text class="s6-label-text" x="112" y="157" text-anchor="middle">refus poli</text>
-            </g>
-            <g class="s6-label user-msg" id="s7-lbl-5">
-              <rect class="s6-label-bg" x="80" y="224" width="62" height="16" rx="5"/>
-              <text class="s6-label-text" x="111" y="235" text-anchor="middle">request_2</text>
-            </g>
-            <g class="s6-label req-llm-mod" id="s7-lbl-6">
-              <rect class="s6-label-bg" x="190" y="248" width="100" height="16" rx="5"/>
-              <text class="s6-label-text" x="240" y="259" text-anchor="middle">[sys_filter+msg]</text>
-            </g>
-            <g class="s6-label res-llm-mod" id="s7-lbl-7">
-              <rect class="s6-label-bg" x="195" y="272" width="100" height="16" rx="5"/>
-              <text class="s6-label-text" x="245" y="283" text-anchor="middle">decision: ALLOW</text>
-            </g>
-            <g class="s6-label allowed" id="s7-lbl-8">
-              <rect class="s6-label-bg" x="220" y="324" width="170" height="16" rx="5"/>
-              <text class="s6-label-text" x="305" y="335" text-anchor="middle">transmet à l'agent principal</text>
-            </g>
-          </g>
-
-          <!-- "Tour 1" / "Tour 2" annotations on the left side -->
-          <text class="s6-label-text" x="20" y="120" text-anchor="start" font-weight="600" fill="var(--red)">tour 1</text>
-          <text class="s6-label-text" x="20" y="280" text-anchor="start" font-weight="600" fill="var(--green)">tour 2</text>
-          <line x1="10" y1="80" x2="10" y2="160" stroke="var(--red)" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
-          <line x1="10" y1="234" x2="10" y2="340" stroke="var(--green)" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
+          <g><rect class="s7-band mod" x="182" y="44" width="316" height="350" rx="12"/></g>
+          <g><rect class="s6-actor-box" x="20" y="10" width="100" height="30" rx="8"/><text class="s6-actor-label s7x-user" x="70" y="29" text-anchor="middle">USER</text><rect class="s6-actor-box s7x-box-mod" x="188" y="10" width="124" height="30" rx="8"/><text class="s6-actor-label s7x-mod" x="250" y="29" text-anchor="middle">MODÉRATEUR</text><rect class="s6-actor-box s7x-box-mod" x="368" y="10" width="124" height="30" rx="8"/><text class="s6-actor-label s7x-mod" x="430" y="23" text-anchor="middle">LLM</text><text class="s6-actor-label s7x-mod s7x-sub" x="430" y="35" text-anchor="middle">(classifieur)</text><rect class="s6-actor-box s7x-box-agent" x="545" y="10" width="110" height="30" rx="8"/><text class="s6-actor-label s7x-agent" x="600" y="29" text-anchor="middle">AGENT</text></g>
+          <line class="s6-lifeline" x1="70" y1="42" x2="70" y2="396"/><line class="s6-lifeline" x1="250" y1="42" x2="250" y2="396"/><line class="s6-lifeline" x1="430" y1="42" x2="430" y2="396"/><line class="s6-lifeline" x1="600" y1="42" x2="600" y2="396"/>
+          <g><rect class="s6-activation s7x-act-mod" id="s7-act-mod-1" x="245" y="68" width="10" height="118" rx="2"/><rect class="s6-activation s7x-act-mod" id="s7-act-mod-2" x="245" y="238" width="10" height="130" rx="2"/><rect class="s6-activation s7x-act-mod" id="s7-act-llm-mod-1" x="425" y="104" width="10" height="54" rx="2"/><rect class="s6-activation s7x-act-mod" id="s7-act-llm-mod-2" x="425" y="274" width="10" height="54" rx="2"/><rect class="s6-activation s7x-act-agent" id="s7-act-agent" x="595" y="344" width="10" height="40" rx="2"/></g>
+          <g><line class="s6-arrow sys-user" id="s7-arr-1" x1="75" y1="82" x2="245" y2="82" marker-end="url(#s7-arr-gray)"/><line class="s6-arrow sys-mod" id="s7-arr-2" x1="255" y1="116" x2="425" y2="116" marker-end="url(#s7-arr-violet)"/><line class="s6-arrow sys-reject" id="s7-arr-3" x1="425" y1="150" x2="255" y2="150" marker-end="url(#s7-arr-red)"/><line class="s6-arrow sys-reject" id="s7-arr-4" x1="245" y1="186" x2="75" y2="186" marker-end="url(#s7-arr-red)"/><line class="s6-arrow sys-user" id="s7-arr-5" x1="75" y1="250" x2="245" y2="250" marker-end="url(#s7-arr-gray)"/><line class="s6-arrow sys-mod" id="s7-arr-6" x1="255" y1="284" x2="425" y2="284" marker-end="url(#s7-arr-violet)"/><line class="s6-arrow sys-allow" id="s7-arr-7" x1="425" y1="318" x2="255" y2="318" marker-end="url(#s7-arr-green)"/><line class="s6-arrow sys-allow" id="s7-arr-8" x1="255" y1="352" x2="595" y2="352" marker-end="url(#s7-arr-green)"/></g>
+          <g><g class="s6-label sys-user" id="s7-lbl-1"><rect class="s6-label-bg" x="133" y="66" width="54" height="14" rx="5"/><text class="s6-label-text" x="160" y="76" text-anchor="middle">request_1</text></g><g class="s6-label sys-mod" id="s7-lbl-2"><rect class="s6-label-bg" x="292" y="100" width="96" height="14" rx="5"/><text class="s6-label-text" x="340" y="110" text-anchor="middle">classifie (filtre)</text></g><g class="s6-label sys-reject" id="s7-lbl-3"><rect class="s6-label-bg" x="299" y="134" width="82" height="14" rx="5"/><text class="s6-label-text" x="340" y="144" text-anchor="middle">décision : DENY</text></g><g class="s6-label sys-reject" id="s7-lbl-4"><rect class="s6-label-bg" x="130" y="170" width="59" height="14" rx="5"/><text class="s6-label-text" x="160" y="180" text-anchor="middle">refus poli</text></g><g class="s6-label sys-user" id="s7-lbl-5"><rect class="s6-label-bg" x="133" y="234" width="54" height="14" rx="5"/><text class="s6-label-text" x="160" y="244" text-anchor="middle">request_2</text></g><g class="s6-label sys-mod" id="s7-lbl-6"><rect class="s6-label-bg" x="292" y="268" width="96" height="14" rx="5"/><text class="s6-label-text" x="340" y="278" text-anchor="middle">classifie (filtre)</text></g><g class="s6-label sys-allow" id="s7-lbl-7"><rect class="s6-label-bg" x="296" y="302" width="87" height="14" rx="5"/><text class="s6-label-text" x="340" y="312" text-anchor="middle">décision : ALLOW</text></g><g class="s6-label sys-allow" id="s7-lbl-8"><rect class="s6-label-bg" x="377" y="336" width="96" height="14" rx="5"/><text class="s6-label-text" x="425" y="346" text-anchor="middle">transmet à l’agent</text></g></g>
+          <text class="s8-try-label" x="6" y="150" fill="var(--red)">TOUR 1</text><text class="s8-try-label" x="6" y="312" fill="var(--green)">TOUR 2</text><line x1="2" y1="82" x2="2" y2="190" stroke="var(--red)" stroke-width="2" opacity="0.35" stroke-linecap="round"/><line x1="2" y1="250" x2="2" y2="356" stroke="var(--green)" stroke-width="2" opacity="0.35" stroke-linecap="round"/>
         </svg>
       </div>
 
@@ -4916,227 +5182,59 @@ body.notes-open .icon-btn#notes-btn {
     <div class="slide8-header">
       <div class="eyebrow">Partie 2 · Approche agentique</div>
     </div>
-    <h1 class="slide8-title">Garde-fou en sortie : <em>l'agent juge</em>.</h1>
-    <p class="slide8-subtitle">Un juge évalue la réponse de l'agent. S'il rejette, l'agent la regénère avec le feedback. Pattern critic-actor.</p>
+    <h1 class="slide8-title">Collaboration multi-agents &amp; <em>agent juge</em>.</h1>
+    <p class="slide8-subtitle">L'orchestrateur délègue la création à un Agent Voyage, puis fait valider l'itinéraire par un Agent Juge. Tant que le juge rejette, l'itinéraire est régénéré avec ses remarques.</p>
 
     <div class="s8-stage reveal d1">
 
       <!-- LEFT — Sequence diagram -->
       <div class="s6-diagram-card">
-        <svg class="s6-diagram-svg" id="s8-diagram-svg" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet">
+        <svg class="s6-diagram-svg" id="s8-diagram-svg" viewBox="0 0 1000 482" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <marker id="s8-arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff9f0a"/>
-            </marker>
-            <marker id="s8-arr-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#0a84ff"/>
-            </marker>
-            <marker id="s8-arr-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/>
-            </marker>
-            <marker id="s8-arr-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#ff453a"/>
-            </marker>
-            <marker id="s8-arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#30d158"/>
-            </marker>
+            <marker id="s8-arr-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#f59e0b"/></marker>
+            <marker id="s8-arr-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#0a84ff"/></marker>
+            <marker id="s8-arr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#30d158"/></marker>
+            <marker id="s8-arr-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ff453a"/></marker>
           </defs>
-
-          <!-- ACTOR BOXES -->
-          <g>
-            <rect class="s6-actor-box user-actor" x="10" y="10" width="80" height="30" rx="8"/>
-            <text class="s6-actor-label user" x="50" y="29" text-anchor="middle">USER</text>
-
-            <rect class="s6-actor-box" x="140" y="10" width="120" height="30" rx="8"/>
-            <text class="s6-actor-label agent" x="200" y="29" text-anchor="middle">ORCHESTRATOR</text>
-
-            <rect class="s6-actor-box" x="310" y="10" width="80" height="30" rx="8"/>
-            <text class="s6-actor-label llm" x="350" y="29" text-anchor="middle">LLM</text>
-
-            <rect class="s6-actor-box" x="460" y="10" width="80" height="30" rx="8"/>
-            <text class="s6-actor-label judge" x="500" y="29" text-anchor="middle">JUDGE</text>
-
-            <rect class="s6-actor-box" x="605" y="10" width="120" height="30" rx="8"/>
-            <text class="s6-actor-label llm-judge" x="665" y="22" text-anchor="middle">LLM</text>
-            <text class="s6-actor-label llm-judge" x="665" y="36" text-anchor="middle">(même modèle)</text>
-          </g>
-
-          <!-- LIFELINES -->
-          <line class="s6-lifeline" x1="50"  y1="46" x2="50"  y2="430"/>
-          <line class="s6-lifeline" x1="200" y1="46" x2="200" y2="430"/>
-          <line class="s6-lifeline" x1="350" y1="46" x2="350" y2="430"/>
-          <line class="s6-lifeline" x1="500" y1="46" x2="500" y2="430"/>
-          <line class="s6-lifeline" x1="665" y1="46" x2="665" y2="430"/>
-
-          <!-- ACTIVATIONS -->
-          <g>
-            <!-- ORCHESTRATOR actif tout du long -->
-            <rect class="s6-activation agent-act" id="s8-act-orch" x="195" y="62" width="10" height="335" rx="2"/>
-            <!-- LLM actif sur génération draft 1 et draft 2 -->
-            <rect class="s6-activation llm-act" id="s8-act-llm-1" x="345" y="80"  width="10" height="46" rx="2"/>
-            <rect class="s6-activation llm-act" id="s8-act-llm-2" x="345" y="224" width="10" height="46" rx="2"/>
-            <!-- JUDGE actif sur eval 1 et eval 2 -->
-            <rect class="s6-activation judge-act" id="s8-act-judge-1" x="495" y="128" width="10" height="68" rx="2"/>
-            <rect class="s6-activation judge-act" id="s8-act-judge-2" x="495" y="272" width="10" height="92" rx="2"/>
-            <!-- LLM_JUDGE actif pendant l'évaluation -->
-            <rect class="s6-activation llm-judge-act" id="s8-act-llmj-1" x="660" y="150" width="10" height="46" rx="2"/>
-            <rect class="s6-activation llm-judge-act" id="s8-act-llmj-2" x="660" y="294" width="10" height="46" rx="2"/>
-          </g>
-
-          <!-- ARROWS - 14 steps -->
-          <g>
-            <!-- Step 1: ORCH → LLM (request to generate final draft) -->
-            <line class="s6-arrow req-llm" id="s8-arr-1" x1="205" y1="80" x2="345" y2="80" marker-end="url(#s8-arr-blue)"/>
-            <!-- Step 2: LLM → ORCH (draft 1 - poor) -->
-            <line class="s6-arrow res-llm" id="s8-arr-2" x1="345" y1="104" x2="205" y2="104" marker-end="url(#s8-arr-blue)"/>
-            <!-- Step 3: ORCH → JUDGE (submit draft 1) -->
-            <line class="s6-arrow req-judge" id="s8-arr-3" x1="205" y1="128" x2="495" y2="128" marker-end="url(#s8-arr-amber)"/>
-            <!-- Step 4: JUDGE → LLM_JUDGE (evaluate draft 1) -->
-            <line class="s6-arrow req-llm-judge" id="s8-arr-4" x1="505" y1="152" x2="660" y2="152" marker-end="url(#s8-arr-amber)"/>
-            <!-- Step 5: LLM_JUDGE → JUDGE (REJECT verdict) -->
-            <line class="s6-arrow res-llm-judge" id="s8-arr-5" x1="660" y1="176" x2="505" y2="176" marker-end="url(#s8-arr-amber)"/>
-            <!-- Step 6: JUDGE → ORCH (reject + feedback) -->
-            <line class="s6-arrow rejected-judge" id="s8-arr-6" x1="495" y1="200" x2="205" y2="200" marker-end="url(#s8-arr-red)"/>
-
-            <!-- Visual gap (200-220) - "try 2" begins -->
-
-            <!-- Step 7: ORCH → LLM (request retry with feedback) -->
-            <line class="s6-arrow req-llm" id="s8-arr-7" x1="205" y1="224" x2="345" y2="224" marker-end="url(#s8-arr-blue)"/>
-            <!-- Step 8: LLM → ORCH (draft 2 - improved) -->
-            <line class="s6-arrow res-llm" id="s8-arr-8" x1="345" y1="248" x2="205" y2="248" marker-end="url(#s8-arr-blue)"/>
-            <!-- Step 9: ORCH → JUDGE (submit draft 2) -->
-            <line class="s6-arrow req-judge" id="s8-arr-9" x1="205" y1="272" x2="495" y2="272" marker-end="url(#s8-arr-amber)"/>
-            <!-- Step 10: JUDGE → LLM_JUDGE (evaluate draft 2) -->
-            <line class="s6-arrow req-llm-judge" id="s8-arr-10" x1="505" y1="296" x2="660" y2="296" marker-end="url(#s8-arr-amber)"/>
-            <!-- Step 11: LLM_JUDGE → JUDGE (ACCEPT verdict) -->
-            <line class="s6-arrow res-llm-judge" id="s8-arr-11" x1="660" y1="320" x2="505" y2="320" marker-end="url(#s8-arr-amber)"/>
-            <!-- Step 12: JUDGE → ORCH (accept) -->
-            <line class="s6-arrow accepted-judge" id="s8-arr-12" x1="495" y1="344" x2="205" y2="344" marker-end="url(#s8-arr-green)"/>
-            <!-- Step 13: ORCH → USER (final approved answer) -->
-            <line class="s6-arrow final" id="s8-arr-13" x1="195" y1="392" x2="55" y2="392" marker-end="url(#s8-arr-green)"/>
-          </g>
-
-          <!-- ARROW LABELS -->
-          <g>
-            <g class="s6-label req-llm" id="s8-lbl-1">
-              <rect class="s6-label-bg" x="215" y="70" width="120" height="16" rx="5"/>
-              <text class="s6-label-text" x="275" y="81" text-anchor="middle">"génère réponse finale"</text>
-            </g>
-            <g class="s6-label res-llm" id="s8-lbl-2">
-              <rect class="s6-label-bg" x="215" y="94" width="120" height="16" rx="5"/>
-              <text class="s6-label-text" x="275" y="105" text-anchor="middle">draft_1: "Tout est..."</text>
-            </g>
-            <g class="s6-label req-judge" id="s8-lbl-3">
-              <rect class="s6-label-bg" x="285" y="118" width="130" height="16" rx="5"/>
-              <text class="s6-label-text" x="350" y="129" text-anchor="middle">submit(draft_1, ctx)</text>
-            </g>
-            <g class="s6-label req-llm-judge" id="s8-lbl-4">
-              <rect class="s6-label-bg" x="515" y="142" width="130" height="16" rx="5"/>
-              <text class="s6-label-text" x="580" y="153" text-anchor="middle">[sys_judge + draft]</text>
-            </g>
-            <g class="s6-label res-llm-judge" id="s8-lbl-5">
-              <rect class="s6-label-bg" x="515" y="166" width="140" height="16" rx="5"/>
-              <text class="s6-label-text" x="585" y="177" text-anchor="middle">{REJECT, score:3/10}</text>
-            </g>
-            <g class="s6-label rejected-judge" id="s8-lbl-6">
-              <rect class="s6-label-bg" x="290" y="190" width="130" height="16" rx="5"/>
-              <text class="s6-label-text" x="355" y="201" text-anchor="middle">REJECT + feedback</text>
-            </g>
-            <g class="s6-label req-llm" id="s8-lbl-7">
-              <rect class="s6-label-bg" x="215" y="214" width="120" height="16" rx="5"/>
-              <text class="s6-label-text" x="275" y="225" text-anchor="middle">"corrige avec feedback"</text>
-            </g>
-            <g class="s6-label res-llm" id="s8-lbl-8">
-              <rect class="s6-label-bg" x="215" y="238" width="120" height="16" rx="5"/>
-              <text class="s6-label-text" x="275" y="249" text-anchor="middle">draft_2: "Vol AF1234..."</text>
-            </g>
-            <g class="s6-label req-judge" id="s8-lbl-9">
-              <rect class="s6-label-bg" x="285" y="262" width="130" height="16" rx="5"/>
-              <text class="s6-label-text" x="350" y="273" text-anchor="middle">submit(draft_2, ctx)</text>
-            </g>
-            <g class="s6-label req-llm-judge" id="s8-lbl-10">
-              <rect class="s6-label-bg" x="515" y="286" width="130" height="16" rx="5"/>
-              <text class="s6-label-text" x="580" y="297" text-anchor="middle">[sys_judge + draft]</text>
-            </g>
-            <g class="s6-label res-llm-judge" id="s8-lbl-11">
-              <rect class="s6-label-bg" x="515" y="310" width="140" height="16" rx="5"/>
-              <text class="s6-label-text" x="585" y="321" text-anchor="middle">{ACCEPT, score:9/10}</text>
-            </g>
-            <g class="s6-label accepted-judge" id="s8-lbl-12">
-              <rect class="s6-label-bg" x="295" y="334" width="120" height="16" rx="5"/>
-              <text class="s6-label-text" x="355" y="345" text-anchor="middle">ACCEPT</text>
-            </g>
-            <g class="s6-label final" id="s8-lbl-13">
-              <rect class="s6-label-bg" x="80" y="382" width="120" height="16" rx="5"/>
-              <text class="s6-label-text" x="140" y="393" text-anchor="middle">final answer</text>
-            </g>
-          </g>
-
-          <!-- "Try 1" / "Try 2" annotations on the left -->
-          <text class="s8-try-label" x="20" y="140" text-anchor="start" fill="var(--red)">TRY 1</text>
-          <text class="s8-try-label" x="20" y="284" text-anchor="start" fill="var(--green)">TRY 2</text>
-          <line x1="10" y1="80" x2="10" y2="200" stroke="var(--red)" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
-          <line x1="10" y1="224" x2="10" y2="344" stroke="var(--green)" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
+          <g><rect class="s8-band orch" x="281" y="44" width="128" height="424" rx="12"/><rect class="s8-band voyage" x="576" y="44" width="128" height="424" rx="12"/><rect class="s8-band juge" x="821" y="44" width="128" height="424" rx="12"/></g>
+          <g><rect class="s6-actor-box" x="20" y="8" width="104" height="32" rx="8"/><text class="s6-actor-label s8x-user" x="72" y="28" text-anchor="middle">USER</text><rect class="s6-actor-box s8x-box-orch" x="283" y="8" width="124" height="32" rx="8"/><text class="s6-actor-label s8x-orch" x="345" y="23" text-anchor="middle">ORCHESTRATEUR</text><text class="s6-actor-label s8x-orch s8x-sub" x="345" y="35" text-anchor="middle">+ son LLM</text><rect class="s6-actor-box s8x-box-voyage" x="578" y="8" width="124" height="32" rx="8"/><text class="s6-actor-label s8x-voyage" x="640" y="23" text-anchor="middle">AGENT VOYAGE</text><text class="s6-actor-label s8x-voyage s8x-sub" x="640" y="35" text-anchor="middle">+ son LLM</text><rect class="s6-actor-box s8x-box-juge" x="823" y="8" width="124" height="32" rx="8"/><text class="s6-actor-label s8x-juge" x="885" y="23" text-anchor="middle">AGENT JUGE</text><text class="s6-actor-label s8x-juge s8x-sub" x="885" y="35" text-anchor="middle">+ son LLM</text></g>
+          <line class="s6-lifeline" x1="72" y1="42" x2="72" y2="470"/><line class="s6-lifeline" x1="345" y1="42" x2="345" y2="470"/><line class="s6-lifeline" x1="640" y1="42" x2="640" y2="470"/><line class="s6-lifeline" x1="885" y1="42" x2="885" y2="470"/>
+          <g><rect class="s6-activation s8x-act-orch" id="s8-act-orch" x="340" y="60" width="10" height="408" rx="2"/><rect class="s6-activation s8x-act-voyage" id="s8-act-voyage" x="635" y="108" width="10" height="240" rx="2"/><rect class="s6-activation s8x-act-juge" id="s8-act-juge" x="880" y="204" width="10" height="210" rx="2"/></g>
+          <g><line class="s6-arrow sys-final" id="s8-arr-1" x1="77" y1="66" x2="340" y2="66" marker-end="url(#s8-arr-blue)"/><path class="s6-arrow sys-orch s8-self" id="s8-arr-2" d="M 350,82 C 389,82 389,98 353,98" fill="none" marker-end="url(#s8-arr-blue)"/><line class="s6-arrow sys-voyage" id="s8-arr-3" x1="350" y1="114" x2="635" y2="114" marker-end="url(#s8-arr-green)"/><path class="s6-arrow sys-voyage s8-self" id="s8-arr-4" d="M 645,130 C 684,130 684,146 648,146" fill="none" marker-end="url(#s8-arr-green)"/><line class="s6-arrow sys-voyage" id="s8-arr-5" x1="635" y1="162" x2="350" y2="162" marker-end="url(#s8-arr-green)"/><path class="s6-arrow sys-orch s8-self" id="s8-arr-6" d="M 350,178 C 389,178 389,194 353,194" fill="none" marker-end="url(#s8-arr-blue)"/><line class="s6-arrow sys-juge" id="s8-arr-7" x1="350" y1="210" x2="880" y2="210" marker-end="url(#s8-arr-orange)"/><path class="s6-arrow sys-juge s8-self" id="s8-arr-8" d="M 890,226 C 929,226 929,242 893,242" fill="none" marker-end="url(#s8-arr-orange)"/><line class="s6-arrow sys-reject" id="s8-arr-9" x1="880" y1="258" x2="350" y2="258" marker-end="url(#s8-arr-red)"/><line class="s6-arrow sys-loop" id="s8-arr-10" x1="350" y1="282" x2="635" y2="282" marker-end="url(#s8-arr-red)"/><path class="s6-arrow sys-voyage s8-self" id="s8-arr-11" d="M 645,298 C 684,298 684,314 648,314" fill="none" marker-end="url(#s8-arr-green)"/><line class="s6-arrow sys-voyage" id="s8-arr-12" x1="635" y1="330" x2="350" y2="330" marker-end="url(#s8-arr-green)"/><line class="s6-arrow sys-juge" id="s8-arr-13" x1="350" y1="354" x2="880" y2="354" marker-end="url(#s8-arr-orange)"/><path class="s6-arrow sys-juge s8-self" id="s8-arr-14" d="M 890,370 C 929,370 929,386 893,386" fill="none" marker-end="url(#s8-arr-orange)"/><line class="s6-arrow sys-accept" id="s8-arr-15" x1="880" y1="402" x2="350" y2="402" marker-end="url(#s8-arr-orange)"/><line class="s6-arrow sys-final" id="s8-arr-16" x1="340" y1="426" x2="77" y2="426" marker-end="url(#s8-arr-blue)"/></g>
+          <g><g class="s6-label sys-final" id="s8-lbl-1"><rect class="s6-label-bg" x="129" y="50" width="159" height="14" rx="5"/><text class="s6-label-text" x="208" y="60" text-anchor="middle">« itinéraire 2 jours à Paris ? »</text></g><g class="s6-label sys-orch" id="s8-lbl-2"><rect class="s6-label-bg" x="390" y="83" width="100" height="14" rx="5"/><text class="s6-label-text" x="397" y="93" text-anchor="start">LLM → outil : Voyage</text></g><g class="s6-label sys-voyage" id="s8-lbl-3"><rect class="s6-label-bg" x="448" y="98" width="90" height="14" rx="5"/><text class="s6-label-text" x="492" y="108" text-anchor="middle">crée l’itinéraire</text></g><g class="s6-label sys-voyage" id="s8-lbl-4"><rect class="s6-label-bg" x="685" y="131" width="54" height="14" rx="5"/><text class="s6-label-text" x="692" y="141" text-anchor="start">LLM génère</text></g><g class="s6-label sys-voyage" id="s8-lbl-5"><rect class="s6-label-bg" x="450" y="146" width="85" height="14" rx="5"/><text class="s6-label-text" x="492" y="156" text-anchor="middle">proposition (v1)</text></g><g class="s6-label sys-orch" id="s8-lbl-6"><rect class="s6-label-bg" x="390" y="179" width="90" height="14" rx="5"/><text class="s6-label-text" x="397" y="189" text-anchor="start">LLM → outil : Juge</text></g><g class="s6-label sys-juge" id="s8-lbl-7"><rect class="s6-label-bg" x="566" y="194" width="99" height="14" rx="5"/><text class="s6-label-text" x="615" y="204" text-anchor="middle">évalue l’itinéraire</text></g><g class="s6-label sys-juge" id="s8-lbl-8"><rect class="s6-label-bg" x="930" y="227" width="58" height="14" rx="5"/><text class="s6-label-text" x="937" y="237" text-anchor="start">LLM analyse</text></g><g class="s6-label sys-reject" id="s8-lbl-9"><rect class="s6-label-bg" x="570" y="242" width="90" height="14" rx="5"/><text class="s6-label-text" x="615" y="252" text-anchor="middle">REJET + remarques</text></g><g class="s6-label sys-loop" id="s8-lbl-10"><rect class="s6-label-bg" x="430" y="266" width="126" height="14" rx="5"/><text class="s6-label-text" x="492" y="276" text-anchor="middle">régénère (avec remarques)</text></g><g class="s6-label sys-voyage" id="s8-lbl-11"><rect class="s6-label-bg" x="685" y="299" width="58" height="14" rx="5"/><text class="s6-label-text" x="692" y="309" text-anchor="start">LLM corrige</text></g><g class="s6-label sys-voyage" id="s8-lbl-12"><rect class="s6-label-bg" x="450" y="314" width="85" height="14" rx="5"/><text class="s6-label-text" x="492" y="324" text-anchor="middle">proposition (v2)</text></g><g class="s6-label sys-juge" id="s8-lbl-13"><rect class="s6-label-bg" x="588" y="338" width="53" height="14" rx="5"/><text class="s6-label-text" x="615" y="348" text-anchor="middle">ré-évalue</text></g><g class="s6-label sys-juge" id="s8-lbl-14"><rect class="s6-label-bg" x="930" y="371" width="58" height="14" rx="5"/><text class="s6-label-text" x="937" y="381" text-anchor="start">LLM analyse</text></g><g class="s6-label sys-accept" id="s8-lbl-15"><rect class="s6-label-bg" x="590" y="386" width="50" height="14" rx="5"/><text class="s6-label-text" x="615" y="396" text-anchor="middle">VALIDÉ ✓</text></g><g class="s6-label sys-final" id="s8-lbl-16"><rect class="s6-label-bg" x="166" y="410" width="85" height="14" rx="5"/><text class="s6-label-text" x="208" y="420" text-anchor="middle">itinéraire final</text></g></g>
+          <text class="s8-try-label" x="6" y="150" fill="var(--red)">TRY 1</text><text class="s8-try-label" x="6" y="360" fill="var(--green)">TRY 2</text><line x1="2" y1="66" x2="2" y2="270" stroke="var(--red)" stroke-width="2" opacity="0.35" stroke-linecap="round"/><line x1="2" y1="274" x2="2" y2="438" stroke="var(--green)" stroke-width="2" opacity="0.35" stroke-linecap="round"/>
         </svg>
       </div>
 
-      <!-- MIDDLE — Current draft + Verdict -->
+      <!-- RIGHT — Acteurs + itinéraire + verdict + itérations -->
       <div class="s6-memories">
-        <div class="s8-draft-card">
-          <div class="s8-card-label">
-            Draft courant
-            <span class="try-tag" id="s8-draft-try">—</span>
-          </div>
-          <div class="s8-draft-content empty" id="s8-draft-content">En attente de génération…</div>
+        <div class="s8-actors-card">
+          <div class="s8-card-label">Acteurs</div>
+          <div class="s8-actor-row"><span class="s8-dot orch"></span><span class="s8-actor-name">Orchestrateur <em>+ son LLM</em></span><span class="s8-actor-role">reçoit la demande, délègue, arbitre</span></div>
+          <div class="s8-actor-row"><span class="s8-dot voyage"></span><span class="s8-actor-name">Agent Voyage <em>+ son LLM</em></span><span class="s8-actor-role">crée l'itinéraire</span></div>
+          <div class="s8-actor-row"><span class="s8-dot juge"></span><span class="s8-actor-name">Agent Juge <em>+ son LLM</em></span><span class="s8-actor-role">vérifie la cohérence</span></div>
         </div>
-
+        <div class="s8-draft-card">
+          <div class="s8-card-label">Itinéraire proposé <span class="try-tag" id="s8-draft-try">—</span></div>
+          <div class="s8-draft-content empty" id="s8-draft-content">En attente de l'Agent Voyage…</div>
+        </div>
         <div class="s8-verdict-card">
           <div class="s8-card-label">Verdict du juge</div>
-          <div class="s8-score">
-            <span class="s8-score-value" id="s8-score-value">—</span>
-            <span class="s8-score-max">/10</span>
-          </div>
-          <div style="margin-top:-4px"></div>
+          <div class="s8-score"><span class="s8-score-value" id="s8-score-value">—</span><span class="s8-score-max">/10</span></div>
           <span class="s8-verdict-pill" id="s8-verdict-pill">—</span>
           <div class="s8-reasons" id="s8-reasons">En attente d'évaluation…</div>
         </div>
-      </div>
-
-      <!-- RIGHT — Tries + Judge config -->
-      <div class="s6-memories">
         <div class="s8-tries-card">
           <div class="s8-card-label">Itérations</div>
           <div class="s8-tries-list" id="s8-tries-list">
-            <div class="s8-try-item" data-try="1">
-              <span class="try-num">Try 1</span>
-              <span class="try-status">—</span>
-              <span class="try-detail">en attente</span>
-            </div>
-            <div class="s8-try-item" data-try="2">
-              <span class="try-num">Try 2</span>
-              <span class="try-status">—</span>
-              <span class="try-detail">en attente</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="s8-tries-card">
-          <div class="s8-card-label">Config du juge</div>
-          <div class="s8-reasons" style="font-size:10px">
-<span class="reason"><span class="tag">model</span>: claude-sonnet-4-5</span>
-<span class="reason"><span class="tag">role</span>: critic</span>
-<span class="reason"><span class="tag">criteria</span>:</span>
-<span class="reason">  · completeness</span>
-<span class="reason">  · accuracy</span>
-<span class="reason">  · actionability</span>
-<span class="reason"><span class="tag">threshold</span>: score &ge; 7/10</span>
+            <div class="s8-try-item" data-try="1"><span class="try-num">Try 1</span><span class="try-status">—</span><span class="try-detail">en attente</span></div>
+            <div class="s8-try-item" data-try="2"><span class="try-num">Try 2</span><span class="try-status">—</span><span class="try-detail">en attente</span></div>
           </div>
         </div>
       </div>
-
     </div>
 
-    <!-- PLAYER -->
+        <!-- PLAYER -->
     <div class="s6-player reveal d2">
       <div class="s6-progress-track" id="s8-progress-track">
         <div class="s6-progress-fill" id="s8-progress-fill"></div>
@@ -5162,7 +5260,7 @@ body.notes-open .icon-btn#notes-btn {
         <button class="ctrl-btn" id="s8-next" aria-label="Étape suivante">
           <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><rect x="17" y="4" width="2" height="16"/></svg>
         </button>
-        <div class="ctrl-step-count">étape <strong id="s8-step-current">0</strong> / <span id="s8-step-total">13</span></div>
+        <div class="ctrl-step-count">étape <strong id="s8-step-current">0</strong> / <span id="s8-step-total">16</span></div>
         <div class="ctrl-speed">
           <button class="speed-btn" data-s8-speed="0.5">0.5×</button>
           <button class="speed-btn active" data-s8-speed="1">1×</button>
@@ -5228,7 +5326,7 @@ body.notes-open .icon-btn#notes-btn {
             <!-- DB up to DBQuery (return) -->
             <path id="s9-edge-q-up" class="s9-edge" d="M 350 268 L 350 175" marker-end="url(#s9-arr-gray)"/>
             <!-- DBSave down to DB (insert) -->
-            <path id="s9-edge-s-down" class="s9-edge" d="M 660 175 L 660 268" marker-end="url(#s9-arr-gray)"/>
+            <path id="s9-edge-s-down" class="s9-edge" d="M 660 175 L 660 248 L 430 248 L 430 268" marker-end="url(#s9-arr-gray)"/>
           </g>
 
           <!-- ─── EDGE LABELS (persistent, show data flow at all times) ─── -->
@@ -6193,6 +6291,116 @@ body.notes-open .icon-btn#notes-btn {
     </div>
   </section>
 
+  <!-- ═════════════ SLIDE FINALE : ARBRE DE DÉCISION ═════════════ -->
+  <section class="slide" data-slide="13">
+    <div class="dt-headwrap">
+      <div class="eyebrow">Synthèse · Choisir son approche</div>
+    </div>
+    <h1 class="dt-title">Quelle <em>approche</em> choisir ?</h1>
+    <p class="dt-subtitle">Deux questions suffisent. <strong>Principe clé : commencer simple, et n'ajouter de la complexité que lorsque le besoin le justifie</strong> — chaque étage gagne en puissance mais ajoute latence et coût.</p>
+
+    <div class="dt-stage reveal d1">
+      <div class="dt-tree">
+
+        <div class="dt-q" style="grid-area:q1">
+          <span class="dt-qnum">Q1</span>
+          <div>
+            <div class="dt-qt">Un simple appel au LLM suffit-il ?</div>
+            <div class="dt-qs">Générer, traduire, résumer, classer — sans outils ni données externes.</div>
+          </div>
+        </div>
+        <div class="dt-yes" style="grid-area:y1">
+          <span class="dt-yes-lbl">OUI</span>
+          <svg class="dt-arrow" viewBox="0 0 72 22"><line x1="2" y1="11" x2="58" y2="11"/><path d="M52 4 L66 11 L52 18"/></svg>
+        </div>
+        <div class="dt-leaf llm" style="grid-area:l1">
+          <div class="dt-leaf-head"><span class="dt-leaf-dot"></span><span class="dt-leaf-name">LLM direct</span><span class="dt-leaf-tag">une question, une réponse</span></div>
+          <ul class="dt-adv"><li>Le plus simple</li><li>Coût &amp; latence minimaux</li><li>≈ 80 % des cas</li></ul>
+          <div class="dt-ex">rédaction · traduction · résumé · classification</div>
+        </div>
+
+        <div class="dt-non" style="grid-area:n1">
+          <svg class="dt-arrow-down" viewBox="0 0 22 34"><line x1="11" y1="2" x2="11" y2="24"/><path d="M5 19 L11 31 L17 19"/></svg>
+          <span class="dt-non-lbl">NON</span>
+        </div>
+
+        <div class="dt-q" style="grid-area:q2">
+          <span class="dt-qnum">Q2</span>
+          <div>
+            <div class="dt-qt">Une seule IA équipée d'outils suffit-elle ?</div>
+            <div class="dt-qs">Un seul domaine, qui raisonne et agit en autonomie (boucle ReAct).</div>
+          </div>
+        </div>
+        <div class="dt-yes" style="grid-area:y2">
+          <span class="dt-yes-lbl">OUI</span>
+          <svg class="dt-arrow" viewBox="0 0 72 22"><line x1="2" y1="11" x2="58" y2="11"/><path d="M52 4 L66 11 L52 18"/></svg>
+        </div>
+        <div class="dt-leaf agent" style="grid-area:l2">
+          <div class="dt-leaf-head"><span class="dt-leaf-dot"></span><span class="dt-leaf-name">Agent — boucle ReAct</span><span class="dt-leaf-tag">une IA autonome qui raisonne &amp; agit</span></div>
+          <ul class="dt-adv"><li>Outils &amp; données réelles</li><li>Raisonnement multi-étapes</li><li>Mémoire &amp; autonomie</li></ul>
+          <div class="dt-ex">consulter un agenda · appeler une API · réserver…</div>
+        </div>
+
+        <div class="dt-non" style="grid-area:n2">
+          <svg class="dt-arrow-down" viewBox="0 0 22 34"><line x1="11" y1="2" x2="11" y2="24"/><path d="M5 19 L11 31 L17 19"/></svg>
+          <span class="dt-non-lbl">NON</span>
+        </div>
+
+        <div class="dt-q dt-else" style="grid-area:q3">
+          <span class="dt-qnum">⇲</span>
+          <div>
+            <div class="dt-qt">Sinon : plusieurs expertises ou une validation</div>
+            <div class="dt-qs">Coordonner des rôles, déléguer, faire valider la réponse.</div>
+          </div>
+        </div>
+        <div class="dt-yes" style="grid-area:y3">
+          <svg class="dt-arrow" viewBox="0 0 72 22"><line x1="2" y1="11" x2="58" y2="11"/><path d="M52 4 L66 11 L52 18"/></svg>
+        </div>
+        <div class="dt-leaf multi" style="grid-area:l3">
+          <div class="dt-leaf-head"><span class="dt-leaf-dot"></span><span class="dt-leaf-name">Multi-agents</span><span class="dt-leaf-tag">un orchestrateur + des agents spécialisés (+ juge)</span></div>
+          <ul class="dt-adv"><li>Combine plusieurs expertises</li><li>Délègue à des agents dédiés</li><li>Fiabilise via un agent juge</li></ul>
+          <div class="dt-ex dt-warn">⚠ plus de latence &amp; de coût — pour les cas vraiment complexes</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════════ SLIDE DE CLÔTURE : QUESTIONS + QR ═════════════ -->
+  <section class="slide closing" data-slide="14">
+    <div class="cl-left">
+      <div class="eyebrow">Merci de votre attention</div>
+      <h1 class="cl-q">Questions&nbsp;?</h1>
+      <p class="cl-sub">Discutons-en — je réponds avec plaisir.</p>
+      <div class="cl-sign">
+        <span class="cl-sign-name">Mohammed BEN SAID</span>
+        <span class="cl-sign-role">Retrouvez mon article &amp; mon profil ci-contre</span>
+      </div>
+    </div>
+
+    <div class="cl-divider"></div>
+
+    <div class="cl-right">
+      <a class="cl-card medium" href="https://medium.com/peaksys-engineering/fine-tuning-vs-rag-a-clear-and-simple-explanation-c087e28a0588" target="_blank" rel="noopener noreferrer">
+        <div class="cl-qr-tile"><svg class="qr-svg" viewBox="0 0 65 65" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><rect width="65" height="65" fill="#ffffff"/><path d="M4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM7 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM24 4h1v1h-1zM30 4h1v1h-1zM33 4h1v1h-1zM36 4h1v1h-1zM42 4h1v1h-1zM44 4h1v1h-1zM46 4h1v1h-1zM49 4h1v1h-1zM50 4h1v1h-1zM51 4h1v1h-1zM54 4h1v1h-1zM55 4h1v1h-1zM56 4h1v1h-1zM57 4h1v1h-1zM58 4h1v1h-1zM59 4h1v1h-1zM60 4h1v1h-1zM4 5h1v1h-1zM10 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM15 5h1v1h-1zM16 5h1v1h-1zM18 5h1v1h-1zM20 5h1v1h-1zM21 5h1v1h-1zM22 5h1v1h-1zM25 5h1v1h-1zM26 5h1v1h-1zM27 5h1v1h-1zM30 5h1v1h-1zM32 5h1v1h-1zM33 5h1v1h-1zM35 5h1v1h-1zM36 5h1v1h-1zM37 5h1v1h-1zM38 5h1v1h-1zM42 5h1v1h-1zM44 5h1v1h-1zM45 5h1v1h-1zM48 5h1v1h-1zM49 5h1v1h-1zM51 5h1v1h-1zM54 5h1v1h-1zM60 5h1v1h-1zM4 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM13 6h1v1h-1zM17 6h1v1h-1zM19 6h1v1h-1zM21 6h1v1h-1zM23 6h1v1h-1zM28 6h1v1h-1zM29 6h1v1h-1zM31 6h1v1h-1zM37 6h1v1h-1zM39 6h1v1h-1zM40 6h1v1h-1zM42 6h1v1h-1zM43 6h1v1h-1zM44 6h1v1h-1zM45 6h1v1h-1zM46 6h1v1h-1zM48 6h1v1h-1zM49 6h1v1h-1zM50 6h1v1h-1zM51 6h1v1h-1zM54 6h1v1h-1zM56 6h1v1h-1zM57 6h1v1h-1zM58 6h1v1h-1zM60 6h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM13 7h1v1h-1zM14 7h1v1h-1zM15 7h1v1h-1zM18 7h1v1h-1zM19 7h1v1h-1zM21 7h1v1h-1zM25 7h1v1h-1zM27 7h1v1h-1zM29 7h1v1h-1zM31 7h1v1h-1zM33 7h1v1h-1zM34 7h1v1h-1zM36 7h1v1h-1zM38 7h1v1h-1zM42 7h1v1h-1zM43 7h1v1h-1zM44 7h1v1h-1zM45 7h1v1h-1zM47 7h1v1h-1zM48 7h1v1h-1zM51 7h1v1h-1zM54 7h1v1h-1zM56 7h1v1h-1zM57 7h1v1h-1zM58 7h1v1h-1zM60 7h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM16 8h1v1h-1zM17 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM23 8h1v1h-1zM24 8h1v1h-1zM25 8h1v1h-1zM27 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM31 8h1v1h-1zM32 8h1v1h-1zM33 8h1v1h-1zM34 8h1v1h-1zM35 8h1v1h-1zM36 8h1v1h-1zM38 8h1v1h-1zM44 8h1v1h-1zM46 8h1v1h-1zM47 8h1v1h-1zM48 8h1v1h-1zM51 8h1v1h-1zM54 8h1v1h-1zM56 8h1v1h-1zM57 8h1v1h-1zM58 8h1v1h-1zM60 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM15 9h1v1h-1zM18 9h1v1h-1zM20 9h1v1h-1zM23 9h1v1h-1zM30 9h1v1h-1zM34 9h1v1h-1zM35 9h1v1h-1zM36 9h1v1h-1zM37 9h1v1h-1zM39 9h1v1h-1zM47 9h1v1h-1zM48 9h1v1h-1zM49 9h1v1h-1zM50 9h1v1h-1zM54 9h1v1h-1zM60 9h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM34 10h1v1h-1zM36 10h1v1h-1zM38 10h1v1h-1zM40 10h1v1h-1zM42 10h1v1h-1zM44 10h1v1h-1zM46 10h1v1h-1zM48 10h1v1h-1zM50 10h1v1h-1zM52 10h1v1h-1zM54 10h1v1h-1zM55 10h1v1h-1zM56 10h1v1h-1zM57 10h1v1h-1zM58 10h1v1h-1zM59 10h1v1h-1zM60 10h1v1h-1zM12 11h1v1h-1zM14 11h1v1h-1zM16 11h1v1h-1zM17 11h1v1h-1zM19 11h1v1h-1zM21 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM30 11h1v1h-1zM34 11h1v1h-1zM35 11h1v1h-1zM36 11h1v1h-1zM37 11h1v1h-1zM41 11h1v1h-1zM42 11h1v1h-1zM44 11h1v1h-1zM46 11h1v1h-1zM51 11h1v1h-1zM52 11h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM14 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM25 12h1v1h-1zM26 12h1v1h-1zM27 12h1v1h-1zM30 12h1v1h-1zM31 12h1v1h-1zM32 12h1v1h-1zM33 12h1v1h-1zM34 12h1v1h-1zM35 12h1v1h-1zM40 12h1v1h-1zM42 12h1v1h-1zM45 12h1v1h-1zM47 12h1v1h-1zM48 12h1v1h-1zM51 12h1v1h-1zM54 12h1v1h-1zM56 12h1v1h-1zM58 12h1v1h-1zM60 12h1v1h-1zM5 13h1v1h-1zM6 13h1v1h-1zM8 13h1v1h-1zM9 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM16 13h1v1h-1zM17 13h1v1h-1zM19 13h1v1h-1zM21 13h1v1h-1zM23 13h1v1h-1zM24 13h1v1h-1zM25 13h1v1h-1zM29 13h1v1h-1zM30 13h1v1h-1zM31 13h1v1h-1zM33 13h1v1h-1zM34 13h1v1h-1zM37 13h1v1h-1zM40 13h1v1h-1zM41 13h1v1h-1zM43 13h1v1h-1zM44 13h1v1h-1zM46 13h1v1h-1zM50 13h1v1h-1zM51 13h1v1h-1zM52 13h1v1h-1zM53 13h1v1h-1zM54 13h1v1h-1zM55 13h1v1h-1zM58 13h1v1h-1zM59 13h1v1h-1zM5 14h1v1h-1zM7 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM14 14h1v1h-1zM15 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM20 14h1v1h-1zM24 14h1v1h-1zM25 14h1v1h-1zM31 14h1v1h-1zM32 14h1v1h-1zM34 14h1v1h-1zM35 14h1v1h-1zM37 14h1v1h-1zM40 14h1v1h-1zM43 14h1v1h-1zM47 14h1v1h-1zM48 14h1v1h-1zM52 14h1v1h-1zM54 14h1v1h-1zM56 14h1v1h-1zM57 14h1v1h-1zM58 14h1v1h-1zM59 14h1v1h-1zM7 15h1v1h-1zM11 15h1v1h-1zM13 15h1v1h-1zM14 15h1v1h-1zM15 15h1v1h-1zM16 15h1v1h-1zM21 15h1v1h-1zM23 15h1v1h-1zM24 15h1v1h-1zM25 15h1v1h-1zM26 15h1v1h-1zM29 15h1v1h-1zM32 15h1v1h-1zM34 15h1v1h-1zM35 15h1v1h-1zM36 15h1v1h-1zM38 15h1v1h-1zM42 15h1v1h-1zM44 15h1v1h-1zM45 15h1v1h-1zM47 15h1v1h-1zM48 15h1v1h-1zM53 15h1v1h-1zM54 15h1v1h-1zM55 15h1v1h-1zM56 15h1v1h-1zM58 15h1v1h-1zM59 15h1v1h-1zM6 16h1v1h-1zM7 16h1v1h-1zM10 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM21 16h1v1h-1zM23 16h1v1h-1zM24 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM33 16h1v1h-1zM34 16h1v1h-1zM36 16h1v1h-1zM37 16h1v1h-1zM42 16h1v1h-1zM44 16h1v1h-1zM45 16h1v1h-1zM47 16h1v1h-1zM48 16h1v1h-1zM53 16h1v1h-1zM56 16h1v1h-1zM57 16h1v1h-1zM5 17h1v1h-1zM6 17h1v1h-1zM12 17h1v1h-1zM17 17h1v1h-1zM18 17h1v1h-1zM20 17h1v1h-1zM22 17h1v1h-1zM25 17h1v1h-1zM27 17h1v1h-1zM29 17h1v1h-1zM31 17h1v1h-1zM35 17h1v1h-1zM36 17h1v1h-1zM39 17h1v1h-1zM41 17h1v1h-1zM43 17h1v1h-1zM45 17h1v1h-1zM46 17h1v1h-1zM47 17h1v1h-1zM51 17h1v1h-1zM52 17h1v1h-1zM53 17h1v1h-1zM58 17h1v1h-1zM60 17h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM12 18h1v1h-1zM14 18h1v1h-1zM15 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM20 18h1v1h-1zM22 18h1v1h-1zM25 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM33 18h1v1h-1zM34 18h1v1h-1zM39 18h1v1h-1zM40 18h1v1h-1zM41 18h1v1h-1zM42 18h1v1h-1zM43 18h1v1h-1zM44 18h1v1h-1zM50 18h1v1h-1zM51 18h1v1h-1zM52 18h1v1h-1zM54 18h1v1h-1zM58 18h1v1h-1zM59 18h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM15 19h1v1h-1zM17 19h1v1h-1zM18 19h1v1h-1zM20 19h1v1h-1zM23 19h1v1h-1zM24 19h1v1h-1zM25 19h1v1h-1zM29 19h1v1h-1zM32 19h1v1h-1zM33 19h1v1h-1zM36 19h1v1h-1zM37 19h1v1h-1zM38 19h1v1h-1zM40 19h1v1h-1zM41 19h1v1h-1zM45 19h1v1h-1zM50 19h1v1h-1zM52 19h1v1h-1zM53 19h1v1h-1zM56 19h1v1h-1zM57 19h1v1h-1zM58 19h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM13 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM23 20h1v1h-1zM24 20h1v1h-1zM25 20h1v1h-1zM26 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM30 20h1v1h-1zM31 20h1v1h-1zM34 20h1v1h-1zM35 20h1v1h-1zM36 20h1v1h-1zM37 20h1v1h-1zM38 20h1v1h-1zM39 20h1v1h-1zM40 20h1v1h-1zM41 20h1v1h-1zM43 20h1v1h-1zM47 20h1v1h-1zM49 20h1v1h-1zM54 20h1v1h-1zM56 20h1v1h-1zM59 20h1v1h-1zM60 20h1v1h-1zM6 21h1v1h-1zM11 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM19 21h1v1h-1zM20 21h1v1h-1zM22 21h1v1h-1zM26 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM32 21h1v1h-1zM33 21h1v1h-1zM35 21h1v1h-1zM36 21h1v1h-1zM37 21h1v1h-1zM41 21h1v1h-1zM43 21h1v1h-1zM44 21h1v1h-1zM45 21h1v1h-1zM46 21h1v1h-1zM47 21h1v1h-1zM49 21h1v1h-1zM51 21h1v1h-1zM52 21h1v1h-1zM53 21h1v1h-1zM56 21h1v1h-1zM57 21h1v1h-1zM60 21h1v1h-1zM4 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM18 22h1v1h-1zM19 22h1v1h-1zM20 22h1v1h-1zM21 22h1v1h-1zM25 22h1v1h-1zM28 22h1v1h-1zM31 22h1v1h-1zM34 22h1v1h-1zM37 22h1v1h-1zM40 22h1v1h-1zM41 22h1v1h-1zM43 22h1v1h-1zM44 22h1v1h-1zM45 22h1v1h-1zM47 22h1v1h-1zM48 22h1v1h-1zM49 22h1v1h-1zM51 22h1v1h-1zM53 22h1v1h-1zM58 22h1v1h-1zM59 22h1v1h-1zM60 22h1v1h-1zM12 23h1v1h-1zM13 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM21 23h1v1h-1zM22 23h1v1h-1zM23 23h1v1h-1zM24 23h1v1h-1zM28 23h1v1h-1zM33 23h1v1h-1zM34 23h1v1h-1zM35 23h1v1h-1zM36 23h1v1h-1zM37 23h1v1h-1zM38 23h1v1h-1zM39 23h1v1h-1zM41 23h1v1h-1zM42 23h1v1h-1zM44 23h1v1h-1zM46 23h1v1h-1zM48 23h1v1h-1zM51 23h1v1h-1zM53 23h1v1h-1zM54 23h1v1h-1zM55 23h1v1h-1zM56 23h1v1h-1zM57 23h1v1h-1zM58 23h1v1h-1zM59 23h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM7 24h1v1h-1zM9 24h1v1h-1zM10 24h1v1h-1zM11 24h1v1h-1zM13 24h1v1h-1zM14 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM21 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM29 24h1v1h-1zM30 24h1v1h-1zM31 24h1v1h-1zM38 24h1v1h-1zM39 24h1v1h-1zM42 24h1v1h-1zM46 24h1v1h-1zM47 24h1v1h-1zM49 24h1v1h-1zM50 24h1v1h-1zM51 24h1v1h-1zM55 24h1v1h-1zM59 24h1v1h-1zM60 24h1v1h-1zM5 25h1v1h-1zM6 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM17 25h1v1h-1zM18 25h1v1h-1zM21 25h1v1h-1zM24 25h1v1h-1zM27 25h1v1h-1zM28 25h1v1h-1zM31 25h1v1h-1zM34 25h1v1h-1zM35 25h1v1h-1zM36 25h1v1h-1zM41 25h1v1h-1zM42 25h1v1h-1zM44 25h1v1h-1zM46 25h1v1h-1zM47 25h1v1h-1zM48 25h1v1h-1zM49 25h1v1h-1zM50 25h1v1h-1zM51 25h1v1h-1zM52 25h1v1h-1zM53 25h1v1h-1zM54 25h1v1h-1zM56 25h1v1h-1zM57 25h1v1h-1zM4 26h1v1h-1zM5 26h1v1h-1zM6 26h1v1h-1zM7 26h1v1h-1zM8 26h1v1h-1zM9 26h1v1h-1zM10 26h1v1h-1zM11 26h1v1h-1zM12 26h1v1h-1zM13 26h1v1h-1zM15 26h1v1h-1zM16 26h1v1h-1zM17 26h1v1h-1zM21 26h1v1h-1zM23 26h1v1h-1zM24 26h1v1h-1zM27 26h1v1h-1zM28 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM33 26h1v1h-1zM35 26h1v1h-1zM40 26h1v1h-1zM42 26h1v1h-1zM45 26h1v1h-1zM49 26h1v1h-1zM50 26h1v1h-1zM51 26h1v1h-1zM52 26h1v1h-1zM54 26h1v1h-1zM55 26h1v1h-1zM59 26h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM6 27h1v1h-1zM8 27h1v1h-1zM11 27h1v1h-1zM12 27h1v1h-1zM13 27h1v1h-1zM14 27h1v1h-1zM16 27h1v1h-1zM20 27h1v1h-1zM22 27h1v1h-1zM26 27h1v1h-1zM27 27h1v1h-1zM28 27h1v1h-1zM29 27h1v1h-1zM31 27h1v1h-1zM33 27h1v1h-1zM35 27h1v1h-1zM36 27h1v1h-1zM37 27h1v1h-1zM38 27h1v1h-1zM39 27h1v1h-1zM41 27h1v1h-1zM43 27h1v1h-1zM46 27h1v1h-1zM47 27h1v1h-1zM48 27h1v1h-1zM49 27h1v1h-1zM51 27h1v1h-1zM52 27h1v1h-1zM53 27h1v1h-1zM54 27h1v1h-1zM56 27h1v1h-1zM57 27h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM8 28h1v1h-1zM10 28h1v1h-1zM11 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM17 28h1v1h-1zM18 28h1v1h-1zM19 28h1v1h-1zM23 28h1v1h-1zM25 28h1v1h-1zM26 28h1v1h-1zM32 28h1v1h-1zM33 28h1v1h-1zM34 28h1v1h-1zM35 28h1v1h-1zM36 28h1v1h-1zM38 28h1v1h-1zM43 28h1v1h-1zM44 28h1v1h-1zM46 28h1v1h-1zM48 28h1v1h-1zM54 28h1v1h-1zM55 28h1v1h-1zM56 28h1v1h-1zM57 28h1v1h-1zM58 28h1v1h-1zM59 28h1v1h-1zM60 28h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM12 29h1v1h-1zM13 29h1v1h-1zM15 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM19 29h1v1h-1zM20 29h1v1h-1zM22 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM28 29h1v1h-1zM29 29h1v1h-1zM31 29h1v1h-1zM32 29h1v1h-1zM33 29h1v1h-1zM34 29h1v1h-1zM37 29h1v1h-1zM38 29h1v1h-1zM39 29h1v1h-1zM43 29h1v1h-1zM46 29h1v1h-1zM48 29h1v1h-1zM51 29h1v1h-1zM52 29h1v1h-1zM53 29h1v1h-1zM55 29h1v1h-1zM57 29h1v1h-1zM58 29h1v1h-1zM59 29h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM7 30h1v1h-1zM8 30h1v1h-1zM9 30h1v1h-1zM10 30h1v1h-1zM11 30h1v1h-1zM12 30h1v1h-1zM15 30h1v1h-1zM16 30h1v1h-1zM18 30h1v1h-1zM20 30h1v1h-1zM21 30h1v1h-1zM23 30h1v1h-1zM26 30h1v1h-1zM27 30h1v1h-1zM28 30h1v1h-1zM29 30h1v1h-1zM30 30h1v1h-1zM31 30h1v1h-1zM32 30h1v1h-1zM33 30h1v1h-1zM34 30h1v1h-1zM38 30h1v1h-1zM39 30h1v1h-1zM40 30h1v1h-1zM42 30h1v1h-1zM43 30h1v1h-1zM45 30h1v1h-1zM46 30h1v1h-1zM47 30h1v1h-1zM49 30h1v1h-1zM50 30h1v1h-1zM51 30h1v1h-1zM52 30h1v1h-1zM53 30h1v1h-1zM54 30h1v1h-1zM55 30h1v1h-1zM56 30h1v1h-1zM57 30h1v1h-1zM58 30h1v1h-1zM4 31h1v1h-1zM5 31h1v1h-1zM6 31h1v1h-1zM7 31h1v1h-1zM8 31h1v1h-1zM12 31h1v1h-1zM17 31h1v1h-1zM19 31h1v1h-1zM21 31h1v1h-1zM23 31h1v1h-1zM26 31h1v1h-1zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM35 31h1v1h-1zM36 31h1v1h-1zM37 31h1v1h-1zM38 31h1v1h-1zM39 31h1v1h-1zM43 31h1v1h-1zM45 31h1v1h-1zM50 31h1v1h-1zM51 31h1v1h-1zM52 31h1v1h-1zM56 31h1v1h-1zM57 31h1v1h-1zM58 31h1v1h-1zM59 31h1v1h-1zM60 31h1v1h-1zM4 32h1v1h-1zM6 32h1v1h-1zM7 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM13 32h1v1h-1zM14 32h1v1h-1zM15 32h1v1h-1zM16 32h1v1h-1zM18 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h1v1h-1zM40 32h1v1h-1zM41 32h1v1h-1zM43 32h1v1h-1zM45 32h1v1h-1zM46 32h1v1h-1zM47 32h1v1h-1zM49 32h1v1h-1zM50 32h1v1h-1zM51 32h1v1h-1zM52 32h1v1h-1zM54 32h1v1h-1zM56 32h1v1h-1zM4 33h1v1h-1zM6 33h1v1h-1zM7 33h1v1h-1zM8 33h1v1h-1zM12 33h1v1h-1zM13 33h1v1h-1zM16 33h1v1h-1zM17 33h1v1h-1zM21 33h1v1h-1zM22 33h1v1h-1zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h1v1h-1zM35 33h1v1h-1zM36 33h1v1h-1zM37 33h1v1h-1zM38 33h1v1h-1zM39 33h1v1h-1zM41 33h1v1h-1zM45 33h1v1h-1zM46 33h1v1h-1zM48 33h1v1h-1zM51 33h1v1h-1zM52 33h1v1h-1zM56 33h1v1h-1zM57 33h1v1h-1zM60 33h1v1h-1zM4 34h1v1h-1zM8 34h1v1h-1zM9 34h1v1h-1zM10 34h1v1h-1zM11 34h1v1h-1zM12 34h1v1h-1zM14 34h1v1h-1zM19 34h1v1h-1zM22 34h1v1h-1zM23 34h1v1h-1zM25 34h1v1h-1zM28 34h1v1h-1zM29 34h1v1h-1zM30 34h1v1h-1zM31 34h1v1h-1zM32 34h1v1h-1zM33 34h1v1h-1zM34 34h1v1h-1zM36 34h1v1h-1zM37 34h1v1h-1zM41 34h1v1h-1zM43 34h1v1h-1zM45 34h1v1h-1zM49 34h1v1h-1zM52 34h1v1h-1zM53 34h1v1h-1zM54 34h1v1h-1zM55 34h1v1h-1zM56 34h1v1h-1zM57 34h1v1h-1zM59 34h1v1h-1zM60 34h1v1h-1zM4 35h1v1h-1zM5 35h1v1h-1zM15 35h1v1h-1zM17 35h1v1h-1zM18 35h1v1h-1zM22 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM26 35h1v1h-1zM28 35h1v1h-1zM34 35h1v1h-1zM35 35h1v1h-1zM36 35h1v1h-1zM37 35h1v1h-1zM38 35h1v1h-1zM40 35h1v1h-1zM41 35h1v1h-1zM42 35h1v1h-1zM44 35h1v1h-1zM46 35h1v1h-1zM48 35h1v1h-1zM51 35h1v1h-1zM54 35h1v1h-1zM55 35h1v1h-1zM57 35h1v1h-1zM58 35h1v1h-1zM60 35h1v1h-1zM4 36h1v1h-1zM5 36h1v1h-1zM6 36h1v1h-1zM7 36h1v1h-1zM8 36h1v1h-1zM10 36h1v1h-1zM11 36h1v1h-1zM13 36h1v1h-1zM18 36h1v1h-1zM21 36h1v1h-1zM23 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM27 36h1v1h-1zM30 36h1v1h-1zM32 36h1v1h-1zM35 36h1v1h-1zM37 36h1v1h-1zM40 36h1v1h-1zM41 36h1v1h-1zM42 36h1v1h-1zM45 36h1v1h-1zM47 36h1v1h-1zM49 36h1v1h-1zM52 36h1v1h-1zM54 36h1v1h-1zM55 36h1v1h-1zM56 36h1v1h-1zM59 36h1v1h-1zM60 36h1v1h-1zM5 37h1v1h-1zM8 37h1v1h-1zM9 37h1v1h-1zM11 37h1v1h-1zM15 37h1v1h-1zM16 37h1v1h-1zM17 37h1v1h-1zM19 37h1v1h-1zM21 37h1v1h-1zM22 37h1v1h-1zM23 37h1v1h-1zM25 37h1v1h-1zM29 37h1v1h-1zM31 37h1v1h-1zM36 37h1v1h-1zM38 37h1v1h-1zM40 37h1v1h-1zM41 37h1v1h-1zM42 37h1v1h-1zM44 37h1v1h-1zM45 37h1v1h-1zM46 37h1v1h-1zM47 37h1v1h-1zM48 37h1v1h-1zM49 37h1v1h-1zM50 37h1v1h-1zM52 37h1v1h-1zM54 37h1v1h-1zM55 37h1v1h-1zM56 37h1v1h-1zM57 37h1v1h-1zM58 37h1v1h-1zM59 37h1v1h-1zM4 38h1v1h-1zM6 38h1v1h-1zM9 38h1v1h-1zM10 38h1v1h-1zM12 38h1v1h-1zM13 38h1v1h-1zM15 38h1v1h-1zM16 38h1v1h-1zM17 38h1v1h-1zM23 38h1v1h-1zM24 38h1v1h-1zM26 38h1v1h-1zM27 38h1v1h-1zM29 38h1v1h-1zM35 38h1v1h-1zM36 38h1v1h-1zM37 38h1v1h-1zM38 38h1v1h-1zM39 38h1v1h-1zM42 38h1v1h-1zM45 38h1v1h-1zM49 38h1v1h-1zM50 38h1v1h-1zM52 38h1v1h-1zM56 38h1v1h-1zM57 38h1v1h-1zM59 38h1v1h-1zM4 39h1v1h-1zM5 39h1v1h-1zM6 39h1v1h-1zM7 39h1v1h-1zM8 39h1v1h-1zM9 39h1v1h-1zM11 39h1v1h-1zM12 39h1v1h-1zM14 39h1v1h-1zM16 39h1v1h-1zM20 39h1v1h-1zM24 39h1v1h-1zM25 39h1v1h-1zM28 39h1v1h-1zM29 39h1v1h-1zM30 39h1v1h-1zM31 39h1v1h-1zM32 39h1v1h-1zM34 39h1v1h-1zM35 39h1v1h-1zM36 39h1v1h-1zM38 39h1v1h-1zM39 39h1v1h-1zM43 39h1v1h-1zM44 39h1v1h-1zM45 39h1v1h-1zM48 39h1v1h-1zM53 39h1v1h-1zM54 39h1v1h-1zM57 39h1v1h-1zM58 39h1v1h-1zM59 39h1v1h-1zM4 40h1v1h-1zM5 40h1v1h-1zM7 40h1v1h-1zM8 40h1v1h-1zM10 40h1v1h-1zM13 40h1v1h-1zM14 40h1v1h-1zM15 40h1v1h-1zM16 40h1v1h-1zM17 40h1v1h-1zM18 40h1v1h-1zM20 40h1v1h-1zM23 40h1v1h-1zM24 40h1v1h-1zM25 40h1v1h-1zM27 40h1v1h-1zM29 40h1v1h-1zM30 40h1v1h-1zM34 40h1v1h-1zM36 40h1v1h-1zM41 40h1v1h-1zM42 40h1v1h-1zM44 40h1v1h-1zM47 40h1v1h-1zM48 40h1v1h-1zM49 40h1v1h-1zM52 40h1v1h-1zM53 40h1v1h-1zM54 40h1v1h-1zM55 40h1v1h-1zM57 40h1v1h-1zM4 41h1v1h-1zM5 41h1v1h-1zM9 41h1v1h-1zM12 41h1v1h-1zM18 41h1v1h-1zM19 41h1v1h-1zM24 41h1v1h-1zM26 41h1v1h-1zM28 41h1v1h-1zM29 41h1v1h-1zM30 41h1v1h-1zM31 41h1v1h-1zM34 41h1v1h-1zM35 41h1v1h-1zM38 41h1v1h-1zM39 41h1v1h-1zM40 41h1v1h-1zM43 41h1v1h-1zM45 41h1v1h-1zM46 41h1v1h-1zM47 41h1v1h-1zM48 41h1v1h-1zM51 41h1v1h-1zM53 41h1v1h-1zM55 41h1v1h-1zM57 41h1v1h-1zM58 41h1v1h-1zM60 41h1v1h-1zM5 42h1v1h-1zM6 42h1v1h-1zM9 42h1v1h-1zM10 42h1v1h-1zM11 42h1v1h-1zM13 42h1v1h-1zM15 42h1v1h-1zM16 42h1v1h-1zM18 42h1v1h-1zM19 42h1v1h-1zM20 42h1v1h-1zM24 42h1v1h-1zM26 42h1v1h-1zM27 42h1v1h-1zM28 42h1v1h-1zM29 42h1v1h-1zM36 42h1v1h-1zM39 42h1v1h-1zM40 42h1v1h-1zM44 42h1v1h-1zM47 42h1v1h-1zM48 42h1v1h-1zM50 42h1v1h-1zM51 42h1v1h-1zM52 42h1v1h-1zM58 42h1v1h-1zM59 42h1v1h-1zM4 43h1v1h-1zM6 43h1v1h-1zM7 43h1v1h-1zM8 43h1v1h-1zM9 43h1v1h-1zM11 43h1v1h-1zM15 43h1v1h-1zM17 43h1v1h-1zM20 43h1v1h-1zM21 43h1v1h-1zM22 43h1v1h-1zM30 43h1v1h-1zM31 43h1v1h-1zM34 43h1v1h-1zM35 43h1v1h-1zM37 43h1v1h-1zM38 43h1v1h-1zM40 43h1v1h-1zM42 43h1v1h-1zM45 43h1v1h-1zM47 43h1v1h-1zM48 43h1v1h-1zM49 43h1v1h-1zM51 43h1v1h-1zM53 43h1v1h-1zM54 43h1v1h-1zM55 43h1v1h-1zM56 43h1v1h-1zM57 43h1v1h-1zM58 43h1v1h-1zM59 43h1v1h-1zM60 43h1v1h-1zM4 44h1v1h-1zM6 44h1v1h-1zM7 44h1v1h-1zM9 44h1v1h-1zM10 44h1v1h-1zM11 44h1v1h-1zM15 44h1v1h-1zM17 44h1v1h-1zM21 44h1v1h-1zM24 44h1v1h-1zM26 44h1v1h-1zM27 44h1v1h-1zM28 44h1v1h-1zM29 44h1v1h-1zM31 44h1v1h-1zM33 44h1v1h-1zM34 44h1v1h-1zM35 44h1v1h-1zM36 44h1v1h-1zM39 44h1v1h-1zM41 44h1v1h-1zM45 44h1v1h-1zM46 44h1v1h-1zM49 44h1v1h-1zM50 44h1v1h-1zM53 44h1v1h-1zM55 44h1v1h-1zM56 44h1v1h-1zM57 44h1v1h-1zM59 44h1v1h-1zM60 44h1v1h-1zM8 45h1v1h-1zM9 45h1v1h-1zM11 45h1v1h-1zM15 45h1v1h-1zM16 45h1v1h-1zM17 45h1v1h-1zM19 45h1v1h-1zM20 45h1v1h-1zM21 45h1v1h-1zM23 45h1v1h-1zM24 45h1v1h-1zM25 45h1v1h-1zM26 45h1v1h-1zM28 45h1v1h-1zM30 45h1v1h-1zM31 45h1v1h-1zM32 45h1v1h-1zM36 45h1v1h-1zM38 45h1v1h-1zM39 45h1v1h-1zM40 45h1v1h-1zM44 45h1v1h-1zM45 45h1v1h-1zM46 45h1v1h-1zM47 45h1v1h-1zM49 45h1v1h-1zM50 45h1v1h-1zM51 45h1v1h-1zM55 45h1v1h-1zM57 45h1v1h-1zM60 45h1v1h-1zM4 46h1v1h-1zM6 46h1v1h-1zM7 46h1v1h-1zM8 46h1v1h-1zM9 46h1v1h-1zM10 46h1v1h-1zM11 46h1v1h-1zM13 46h1v1h-1zM14 46h1v1h-1zM15 46h1v1h-1zM16 46h1v1h-1zM17 46h1v1h-1zM19 46h1v1h-1zM20 46h1v1h-1zM21 46h1v1h-1zM22 46h1v1h-1zM23 46h1v1h-1zM25 46h1v1h-1zM27 46h1v1h-1zM28 46h1v1h-1zM29 46h1v1h-1zM30 46h1v1h-1zM31 46h1v1h-1zM34 46h1v1h-1zM36 46h1v1h-1zM40 46h1v1h-1zM42 46h1v1h-1zM43 46h1v1h-1zM44 46h1v1h-1zM47 46h1v1h-1zM48 46h1v1h-1zM49 46h1v1h-1zM50 46h1v1h-1zM51 46h1v1h-1zM54 46h1v1h-1zM56 46h1v1h-1zM58 46h1v1h-1zM59 46h1v1h-1zM60 46h1v1h-1zM7 47h1v1h-1zM8 47h1v1h-1zM11 47h1v1h-1zM12 47h1v1h-1zM13 47h1v1h-1zM14 47h1v1h-1zM21 47h1v1h-1zM23 47h1v1h-1zM27 47h1v1h-1zM28 47h1v1h-1zM29 47h1v1h-1zM31 47h1v1h-1zM33 47h1v1h-1zM34 47h1v1h-1zM35 47h1v1h-1zM36 47h1v1h-1zM38 47h1v1h-1zM39 47h1v1h-1zM40 47h1v1h-1zM41 47h1v1h-1zM42 47h1v1h-1zM44 47h1v1h-1zM45 47h1v1h-1zM46 47h1v1h-1zM48 47h1v1h-1zM50 47h1v1h-1zM51 47h1v1h-1zM53 47h1v1h-1zM54 47h1v1h-1zM56 47h1v1h-1zM57 47h1v1h-1zM58 47h1v1h-1zM59 47h1v1h-1zM10 48h1v1h-1zM11 48h1v1h-1zM14 48h1v1h-1zM15 48h1v1h-1zM16 48h1v1h-1zM17 48h1v1h-1zM19 48h1v1h-1zM20 48h1v1h-1zM26 48h1v1h-1zM28 48h1v1h-1zM30 48h1v1h-1zM32 48h1v1h-1zM33 48h1v1h-1zM35 48h1v1h-1zM36 48h1v1h-1zM38 48h1v1h-1zM39 48h1v1h-1zM40 48h1v1h-1zM42 48h1v1h-1zM46 48h1v1h-1zM47 48h1v1h-1zM49 48h1v1h-1zM50 48h1v1h-1zM53 48h1v1h-1zM54 48h1v1h-1zM55 48h1v1h-1zM56 48h1v1h-1zM59 48h1v1h-1zM6 49h1v1h-1zM7 49h1v1h-1zM8 49h1v1h-1zM9 49h1v1h-1zM11 49h1v1h-1zM12 49h1v1h-1zM14 49h1v1h-1zM18 49h1v1h-1zM20 49h1v1h-1zM23 49h1v1h-1zM25 49h1v1h-1zM26 49h1v1h-1zM27 49h1v1h-1zM28 49h1v1h-1zM32 49h1v1h-1zM35 49h1v1h-1zM36 49h1v1h-1zM38 49h1v1h-1zM39 49h1v1h-1zM41 49h1v1h-1zM46 49h1v1h-1zM48 49h1v1h-1zM50 49h1v1h-1zM53 49h1v1h-1zM54 49h1v1h-1zM55 49h1v1h-1zM56 49h1v1h-1zM57 49h1v1h-1zM4 50h1v1h-1zM6 50h1v1h-1zM9 50h1v1h-1zM10 50h1v1h-1zM12 50h1v1h-1zM23 50h1v1h-1zM25 50h1v1h-1zM26 50h1v1h-1zM27 50h1v1h-1zM28 50h1v1h-1zM30 50h1v1h-1zM31 50h1v1h-1zM32 50h1v1h-1zM35 50h1v1h-1zM36 50h1v1h-1zM40 50h1v1h-1zM48 50h1v1h-1zM49 50h1v1h-1zM50 50h1v1h-1zM52 50h1v1h-1zM56 50h1v1h-1zM58 50h1v1h-1zM59 50h1v1h-1zM4 51h1v1h-1zM5 51h1v1h-1zM6 51h1v1h-1zM7 51h1v1h-1zM8 51h1v1h-1zM11 51h1v1h-1zM13 51h1v1h-1zM14 51h1v1h-1zM18 51h1v1h-1zM19 51h1v1h-1zM20 51h1v1h-1zM21 51h1v1h-1zM22 51h1v1h-1zM23 51h1v1h-1zM26 51h1v1h-1zM27 51h1v1h-1zM28 51h1v1h-1zM29 51h1v1h-1zM31 51h1v1h-1zM34 51h1v1h-1zM35 51h1v1h-1zM36 51h1v1h-1zM38 51h1v1h-1zM40 51h1v1h-1zM41 51h1v1h-1zM42 51h1v1h-1zM43 51h1v1h-1zM44 51h1v1h-1zM46 51h1v1h-1zM48 51h1v1h-1zM49 51h1v1h-1zM51 51h1v1h-1zM54 51h1v1h-1zM57 51h1v1h-1zM58 51h1v1h-1zM59 51h1v1h-1zM10 52h1v1h-1zM12 52h1v1h-1zM17 52h1v1h-1zM21 52h1v1h-1zM24 52h1v1h-1zM26 52h1v1h-1zM27 52h1v1h-1zM28 52h1v1h-1zM29 52h1v1h-1zM30 52h1v1h-1zM31 52h1v1h-1zM32 52h1v1h-1zM33 52h1v1h-1zM34 52h1v1h-1zM35 52h1v1h-1zM38 52h1v1h-1zM39 52h1v1h-1zM41 52h1v1h-1zM44 52h1v1h-1zM46 52h1v1h-1zM48 52h1v1h-1zM50 52h1v1h-1zM51 52h1v1h-1zM52 52h1v1h-1zM53 52h1v1h-1zM54 52h1v1h-1zM55 52h1v1h-1zM56 52h1v1h-1zM57 52h1v1h-1zM60 52h1v1h-1zM12 53h1v1h-1zM13 53h1v1h-1zM14 53h1v1h-1zM16 53h1v1h-1zM19 53h1v1h-1zM20 53h1v1h-1zM23 53h1v1h-1zM26 53h1v1h-1zM27 53h1v1h-1zM28 53h1v1h-1zM30 53h1v1h-1zM34 53h1v1h-1zM35 53h1v1h-1zM36 53h1v1h-1zM38 53h1v1h-1zM41 53h1v1h-1zM42 53h1v1h-1zM43 53h1v1h-1zM45 53h1v1h-1zM46 53h1v1h-1zM49 53h1v1h-1zM51 53h1v1h-1zM52 53h1v1h-1zM56 53h1v1h-1zM58 53h1v1h-1zM60 53h1v1h-1zM4 54h1v1h-1zM5 54h1v1h-1zM6 54h1v1h-1zM7 54h1v1h-1zM8 54h1v1h-1zM9 54h1v1h-1zM10 54h1v1h-1zM13 54h1v1h-1zM15 54h1v1h-1zM19 54h1v1h-1zM20 54h1v1h-1zM24 54h1v1h-1zM25 54h1v1h-1zM29 54h1v1h-1zM30 54h1v1h-1zM32 54h1v1h-1zM34 54h1v1h-1zM35 54h1v1h-1zM36 54h1v1h-1zM37 54h1v1h-1zM38 54h1v1h-1zM43 54h1v1h-1zM44 54h1v1h-1zM45 54h1v1h-1zM47 54h1v1h-1zM48 54h1v1h-1zM49 54h1v1h-1zM50 54h1v1h-1zM52 54h1v1h-1zM54 54h1v1h-1zM56 54h1v1h-1zM57 54h1v1h-1zM59 54h1v1h-1zM4 55h1v1h-1zM10 55h1v1h-1zM12 55h1v1h-1zM13 55h1v1h-1zM15 55h1v1h-1zM16 55h1v1h-1zM17 55h1v1h-1zM18 55h1v1h-1zM19 55h1v1h-1zM20 55h1v1h-1zM22 55h1v1h-1zM23 55h1v1h-1zM24 55h1v1h-1zM29 55h1v1h-1zM30 55h1v1h-1zM34 55h1v1h-1zM35 55h1v1h-1zM39 55h1v1h-1zM40 55h1v1h-1zM41 55h1v1h-1zM45 55h1v1h-1zM46 55h1v1h-1zM51 55h1v1h-1zM52 55h1v1h-1zM56 55h1v1h-1zM58 55h1v1h-1zM59 55h1v1h-1zM60 55h1v1h-1zM4 56h1v1h-1zM6 56h1v1h-1zM7 56h1v1h-1zM8 56h1v1h-1zM10 56h1v1h-1zM13 56h1v1h-1zM16 56h1v1h-1zM17 56h1v1h-1zM18 56h1v1h-1zM19 56h1v1h-1zM20 56h1v1h-1zM21 56h1v1h-1zM23 56h1v1h-1zM24 56h1v1h-1zM28 56h1v1h-1zM30 56h1v1h-1zM31 56h1v1h-1zM32 56h1v1h-1zM33 56h1v1h-1zM34 56h1v1h-1zM35 56h1v1h-1zM37 56h1v1h-1zM38 56h1v1h-1zM41 56h1v1h-1zM45 56h1v1h-1zM46 56h1v1h-1zM47 56h1v1h-1zM52 56h1v1h-1zM53 56h1v1h-1zM54 56h1v1h-1zM55 56h1v1h-1zM56 56h1v1h-1zM57 56h1v1h-1zM59 56h1v1h-1zM4 57h1v1h-1zM6 57h1v1h-1zM7 57h1v1h-1zM8 57h1v1h-1zM10 57h1v1h-1zM16 57h1v1h-1zM17 57h1v1h-1zM19 57h1v1h-1zM24 57h1v1h-1zM26 57h1v1h-1zM31 57h1v1h-1zM32 57h1v1h-1zM36 57h1v1h-1zM37 57h1v1h-1zM41 57h1v1h-1zM42 57h1v1h-1zM43 57h1v1h-1zM46 57h1v1h-1zM47 57h1v1h-1zM49 57h1v1h-1zM53 57h1v1h-1zM55 57h1v1h-1zM56 57h1v1h-1zM58 57h1v1h-1zM4 58h1v1h-1zM6 58h1v1h-1zM7 58h1v1h-1zM8 58h1v1h-1zM10 58h1v1h-1zM13 58h1v1h-1zM19 58h1v1h-1zM21 58h1v1h-1zM27 58h1v1h-1zM28 58h1v1h-1zM32 58h1v1h-1zM33 58h1v1h-1zM37 58h1v1h-1zM38 58h1v1h-1zM39 58h1v1h-1zM40 58h1v1h-1zM41 58h1v1h-1zM44 58h1v1h-1zM49 58h1v1h-1zM52 58h1v1h-1zM54 58h1v1h-1zM56 58h1v1h-1zM58 58h1v1h-1zM59 58h1v1h-1zM60 58h1v1h-1zM4 59h1v1h-1zM10 59h1v1h-1zM13 59h1v1h-1zM19 59h1v1h-1zM22 59h1v1h-1zM23 59h1v1h-1zM24 59h1v1h-1zM25 59h1v1h-1zM27 59h1v1h-1zM28 59h1v1h-1zM31 59h1v1h-1zM33 59h1v1h-1zM34 59h1v1h-1zM36 59h1v1h-1zM38 59h1v1h-1zM41 59h1v1h-1zM42 59h1v1h-1zM45 59h1v1h-1zM47 59h1v1h-1zM48 59h1v1h-1zM49 59h1v1h-1zM50 59h1v1h-1zM51 59h1v1h-1zM52 59h1v1h-1zM53 59h1v1h-1zM58 59h1v1h-1zM4 60h1v1h-1zM5 60h1v1h-1zM6 60h1v1h-1zM7 60h1v1h-1zM8 60h1v1h-1zM9 60h1v1h-1zM10 60h1v1h-1zM13 60h1v1h-1zM16 60h1v1h-1zM18 60h1v1h-1zM20 60h1v1h-1zM22 60h1v1h-1zM23 60h1v1h-1zM24 60h1v1h-1zM28 60h1v1h-1zM29 60h1v1h-1zM30 60h1v1h-1zM31 60h1v1h-1zM33 60h1v1h-1zM34 60h1v1h-1zM37 60h1v1h-1zM38 60h1v1h-1zM41 60h1v1h-1zM42 60h1v1h-1zM44 60h1v1h-1zM47 60h1v1h-1zM54 60h1v1h-1zM55 60h1v1h-1zM56 60h1v1h-1zM57 60h1v1h-1zM58 60h1v1h-1zM59 60h1v1h-1z" fill="#0b3a8c"/></svg></div>
+        <div class="cl-card-info">
+          <div class="cl-card-head"><span class="cl-card-icon"><svg class="cl-ic" viewBox="0 0 40 24" fill="currentColor" aria-hidden="true"><ellipse cx="8" cy="12" rx="8" ry="7.4"/><ellipse cx="24" cy="12" rx="3.4" ry="7.4"/><ellipse cx="34.5" cy="12" rx="1.4" ry="7.4"/></svg></span><span class="cl-card-title">Mon article Medium</span></div>
+          <div class="cl-card-text">Fine-Tuning vs RAG : A Clear and Simple Explanation</div>
+          <div class="cl-card-scan"><span class="cl-scan-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg></span>Scannez pour lire l'article</div>
+        </div>
+      </a>
+
+      <a class="cl-card linkedin" href="https://www.linkedin.com/in/mohammed-ben-said-15ba20264/" target="_blank" rel="noopener noreferrer">
+        <div class="cl-qr-tile"><svg class="qr-svg" viewBox="0 0 49 49" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><rect width="49" height="49" fill="#ffffff"/><path d="M4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM7 4h1v1h-1zM8 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM24 4h1v1h-1zM26 4h1v1h-1zM28 4h1v1h-1zM29 4h1v1h-1zM30 4h1v1h-1zM31 4h1v1h-1zM34 4h1v1h-1zM35 4h1v1h-1zM38 4h1v1h-1zM39 4h1v1h-1zM40 4h1v1h-1zM41 4h1v1h-1zM42 4h1v1h-1zM43 4h1v1h-1zM44 4h1v1h-1zM4 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM15 5h1v1h-1zM16 5h1v1h-1zM17 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM25 5h1v1h-1zM26 5h1v1h-1zM28 5h1v1h-1zM29 5h1v1h-1zM30 5h1v1h-1zM31 5h1v1h-1zM38 5h1v1h-1zM44 5h1v1h-1zM4 6h1v1h-1zM6 6h1v1h-1zM7 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h1v1h-1zM16 6h1v1h-1zM19 6h1v1h-1zM23 6h1v1h-1zM27 6h1v1h-1zM29 6h1v1h-1zM32 6h1v1h-1zM33 6h1v1h-1zM34 6h1v1h-1zM35 6h1v1h-1zM38 6h1v1h-1zM40 6h1v1h-1zM41 6h1v1h-1zM42 6h1v1h-1zM44 6h1v1h-1zM4 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM15 7h1v1h-1zM16 7h1v1h-1zM17 7h1v1h-1zM23 7h1v1h-1zM25 7h1v1h-1zM26 7h1v1h-1zM29 7h1v1h-1zM30 7h1v1h-1zM31 7h1v1h-1zM35 7h1v1h-1zM38 7h1v1h-1zM40 7h1v1h-1zM41 7h1v1h-1zM42 7h1v1h-1zM44 7h1v1h-1zM4 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM15 8h1v1h-1zM16 8h1v1h-1zM17 8h1v1h-1zM19 8h1v1h-1zM20 8h1v1h-1zM21 8h1v1h-1zM23 8h1v1h-1zM24 8h1v1h-1zM27 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM31 8h1v1h-1zM32 8h1v1h-1zM38 8h1v1h-1zM40 8h1v1h-1zM41 8h1v1h-1zM42 8h1v1h-1zM44 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM12 9h1v1h-1zM13 9h1v1h-1zM14 9h1v1h-1zM15 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM20 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM24 9h1v1h-1zM25 9h1v1h-1zM27 9h1v1h-1zM30 9h1v1h-1zM31 9h1v1h-1zM32 9h1v1h-1zM33 9h1v1h-1zM34 9h1v1h-1zM35 9h1v1h-1zM38 9h1v1h-1zM44 9h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM34 10h1v1h-1zM36 10h1v1h-1zM38 10h1v1h-1zM39 10h1v1h-1zM40 10h1v1h-1zM41 10h1v1h-1zM42 10h1v1h-1zM43 10h1v1h-1zM44 10h1v1h-1zM14 11h1v1h-1zM15 11h1v1h-1zM16 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM20 11h1v1h-1zM25 11h1v1h-1zM26 11h1v1h-1zM28 11h1v1h-1zM29 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM34 11h1v1h-1zM35 11h1v1h-1zM36 11h1v1h-1zM7 12h1v1h-1zM10 12h1v1h-1zM14 12h1v1h-1zM21 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM31 12h1v1h-1zM32 12h1v1h-1zM35 12h1v1h-1zM36 12h1v1h-1zM39 12h1v1h-1zM40 12h1v1h-1zM41 12h1v1h-1zM43 12h1v1h-1zM44 12h1v1h-1zM4 13h1v1h-1zM6 13h1v1h-1zM7 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM16 13h1v1h-1zM19 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM26 13h1v1h-1zM28 13h1v1h-1zM30 13h1v1h-1zM32 13h1v1h-1zM34 13h1v1h-1zM36 13h1v1h-1zM37 13h1v1h-1zM38 13h1v1h-1zM41 13h1v1h-1zM42 13h1v1h-1zM43 13h1v1h-1zM44 13h1v1h-1zM5 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM13 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM20 14h1v1h-1zM23 14h1v1h-1zM24 14h1v1h-1zM25 14h1v1h-1zM29 14h1v1h-1zM35 14h1v1h-1zM39 14h1v1h-1zM40 14h1v1h-1zM41 14h1v1h-1zM42 14h1v1h-1zM6 15h1v1h-1zM7 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM19 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM23 15h1v1h-1zM30 15h1v1h-1zM31 15h1v1h-1zM32 15h1v1h-1zM34 15h1v1h-1zM37 15h1v1h-1zM38 15h1v1h-1zM39 15h1v1h-1zM40 15h1v1h-1zM42 15h1v1h-1zM43 15h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM14 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM23 16h1v1h-1zM25 16h1v1h-1zM26 16h1v1h-1zM31 16h1v1h-1zM32 16h1v1h-1zM33 16h1v1h-1zM34 16h1v1h-1zM35 16h1v1h-1zM37 16h1v1h-1zM38 16h1v1h-1zM41 16h1v1h-1zM43 16h1v1h-1zM44 16h1v1h-1zM5 17h1v1h-1zM6 17h1v1h-1zM7 17h1v1h-1zM13 17h1v1h-1zM16 17h1v1h-1zM18 17h1v1h-1zM19 17h1v1h-1zM21 17h1v1h-1zM23 17h1v1h-1zM27 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM32 17h1v1h-1zM33 17h1v1h-1zM35 17h1v1h-1zM37 17h1v1h-1zM42 17h1v1h-1zM43 17h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM7 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM13 18h1v1h-1zM18 18h1v1h-1zM20 18h1v1h-1zM21 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM27 18h1v1h-1zM28 18h1v1h-1zM32 18h1v1h-1zM33 18h1v1h-1zM38 18h1v1h-1zM40 18h1v1h-1zM41 18h1v1h-1zM42 18h1v1h-1zM43 18h1v1h-1zM44 18h1v1h-1zM5 19h1v1h-1zM8 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM17 19h1v1h-1zM22 19h1v1h-1zM23 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM28 19h1v1h-1zM31 19h1v1h-1zM33 19h1v1h-1zM34 19h1v1h-1zM35 19h1v1h-1zM38 19h1v1h-1zM39 19h1v1h-1zM40 19h1v1h-1zM44 19h1v1h-1zM5 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM13 20h1v1h-1zM14 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM24 20h1v1h-1zM28 20h1v1h-1zM29 20h1v1h-1zM33 20h1v1h-1zM35 20h1v1h-1zM36 20h1v1h-1zM39 20h1v1h-1zM41 20h1v1h-1zM43 20h1v1h-1zM44 20h1v1h-1zM6 21h1v1h-1zM8 21h1v1h-1zM9 21h1v1h-1zM13 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM28 21h1v1h-1zM29 21h1v1h-1zM30 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM39 21h1v1h-1zM41 21h1v1h-1zM43 21h1v1h-1zM44 21h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM20 22h1v1h-1zM21 22h1v1h-1zM25 22h1v1h-1zM26 22h1v1h-1zM27 22h1v1h-1zM28 22h1v1h-1zM29 22h1v1h-1zM33 22h1v1h-1zM37 22h1v1h-1zM40 22h1v1h-1zM42 22h1v1h-1zM43 22h1v1h-1zM44 22h1v1h-1zM5 23h1v1h-1zM8 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM12 23h1v1h-1zM16 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM21 23h1v1h-1zM22 23h1v1h-1zM23 23h1v1h-1zM24 23h1v1h-1zM25 23h1v1h-1zM26 23h1v1h-1zM30 23h1v1h-1zM32 23h1v1h-1zM33 23h1v1h-1zM36 23h1v1h-1zM37 23h1v1h-1zM39 23h1v1h-1zM41 23h1v1h-1zM43 23h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM9 24h1v1h-1zM10 24h1v1h-1zM12 24h1v1h-1zM15 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM25 24h1v1h-1zM26 24h1v1h-1zM27 24h1v1h-1zM29 24h1v1h-1zM30 24h1v1h-1zM32 24h1v1h-1zM34 24h1v1h-1zM35 24h1v1h-1zM38 24h1v1h-1zM39 24h1v1h-1zM42 24h1v1h-1zM43 24h1v1h-1zM11 25h1v1h-1zM14 25h1v1h-1zM15 25h1v1h-1zM16 25h1v1h-1zM17 25h1v1h-1zM20 25h1v1h-1zM22 25h1v1h-1zM23 25h1v1h-1zM24 25h1v1h-1zM26 25h1v1h-1zM28 25h1v1h-1zM33 25h1v1h-1zM34 25h1v1h-1zM36 25h1v1h-1zM37 25h1v1h-1zM38 25h1v1h-1zM42 25h1v1h-1zM43 25h1v1h-1zM44 25h1v1h-1zM5 26h1v1h-1zM9 26h1v1h-1zM10 26h1v1h-1zM11 26h1v1h-1zM14 26h1v1h-1zM19 26h1v1h-1zM22 26h1v1h-1zM24 26h1v1h-1zM25 26h1v1h-1zM28 26h1v1h-1zM30 26h1v1h-1zM33 26h1v1h-1zM35 26h1v1h-1zM37 26h1v1h-1zM39 26h1v1h-1zM40 26h1v1h-1zM42 26h1v1h-1zM43 26h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM6 27h1v1h-1zM7 27h1v1h-1zM8 27h1v1h-1zM9 27h1v1h-1zM12 27h1v1h-1zM13 27h1v1h-1zM14 27h1v1h-1zM19 27h1v1h-1zM22 27h1v1h-1zM27 27h1v1h-1zM28 27h1v1h-1zM29 27h1v1h-1zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM36 27h1v1h-1zM39 27h1v1h-1zM41 27h1v1h-1zM42 27h1v1h-1zM43 27h1v1h-1zM5 28h1v1h-1zM6 28h1v1h-1zM9 28h1v1h-1zM10 28h1v1h-1zM11 28h1v1h-1zM12 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM18 28h1v1h-1zM19 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM25 28h1v1h-1zM28 28h1v1h-1zM29 28h1v1h-1zM30 28h1v1h-1zM31 28h1v1h-1zM32 28h1v1h-1zM33 28h1v1h-1zM36 28h1v1h-1zM37 28h1v1h-1zM38 28h1v1h-1zM41 28h1v1h-1zM6 29h1v1h-1zM7 29h1v1h-1zM8 29h1v1h-1zM9 29h1v1h-1zM11 29h1v1h-1zM13 29h1v1h-1zM14 29h1v1h-1zM17 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM22 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM27 29h1v1h-1zM28 29h1v1h-1zM29 29h1v1h-1zM34 29h1v1h-1zM35 29h1v1h-1zM37 29h1v1h-1zM41 29h1v1h-1zM43 29h1v1h-1zM4 30h1v1h-1zM8 30h1v1h-1zM9 30h1v1h-1zM10 30h1v1h-1zM11 30h1v1h-1zM12 30h1v1h-1zM13 30h1v1h-1zM17 30h1v1h-1zM19 30h1v1h-1zM20 30h1v1h-1zM23 30h1v1h-1zM24 30h1v1h-1zM25 30h1v1h-1zM27 30h1v1h-1zM29 30h1v1h-1zM30 30h1v1h-1zM32 30h1v1h-1zM36 30h1v1h-1zM38 30h1v1h-1zM40 30h1v1h-1zM43 30h1v1h-1zM44 30h1v1h-1zM4 31h1v1h-1zM5 31h1v1h-1zM7 31h1v1h-1zM11 31h1v1h-1zM12 31h1v1h-1zM14 31h1v1h-1zM15 31h1v1h-1zM17 31h1v1h-1zM18 31h1v1h-1zM21 31h1v1h-1zM23 31h1v1h-1zM26 31h1v1h-1zM27 31h1v1h-1zM28 31h1v1h-1zM29 31h1v1h-1zM32 31h1v1h-1zM33 31h1v1h-1zM34 31h1v1h-1zM36 31h1v1h-1zM40 31h1v1h-1zM4 32h1v1h-1zM6 32h1v1h-1zM8 32h1v1h-1zM9 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM19 32h1v1h-1zM20 32h1v1h-1zM21 32h1v1h-1zM22 32h1v1h-1zM23 32h1v1h-1zM25 32h1v1h-1zM30 32h1v1h-1zM31 32h1v1h-1zM33 32h1v1h-1zM44 32h1v1h-1zM5 33h1v1h-1zM6 33h1v1h-1zM12 33h1v1h-1zM14 33h1v1h-1zM15 33h1v1h-1zM16 33h1v1h-1zM17 33h1v1h-1zM19 33h1v1h-1zM21 33h1v1h-1zM22 33h1v1h-1zM23 33h1v1h-1zM25 33h1v1h-1zM26 33h1v1h-1zM29 33h1v1h-1zM30 33h1v1h-1zM31 33h1v1h-1zM33 33h1v1h-1zM36 33h1v1h-1zM38 33h1v1h-1zM39 33h1v1h-1zM42 33h1v1h-1zM43 33h1v1h-1zM44 33h1v1h-1zM4 34h1v1h-1zM10 34h1v1h-1zM19 34h1v1h-1zM20 34h1v1h-1zM22 34h1v1h-1zM24 34h1v1h-1zM26 34h1v1h-1zM30 34h1v1h-1zM33 34h1v1h-1zM36 34h1v1h-1zM40 34h1v1h-1zM41 34h1v1h-1zM42 34h1v1h-1zM43 34h1v1h-1zM44 34h1v1h-1zM7 35h1v1h-1zM8 35h1v1h-1zM11 35h1v1h-1zM13 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM21 35h1v1h-1zM23 35h1v1h-1zM24 35h1v1h-1zM25 35h1v1h-1zM26 35h1v1h-1zM27 35h1v1h-1zM29 35h1v1h-1zM33 35h1v1h-1zM35 35h1v1h-1zM37 35h1v1h-1zM41 35h1v1h-1zM44 35h1v1h-1zM4 36h1v1h-1zM6 36h1v1h-1zM7 36h1v1h-1zM10 36h1v1h-1zM13 36h1v1h-1zM14 36h1v1h-1zM16 36h1v1h-1zM18 36h1v1h-1zM20 36h1v1h-1zM24 36h1v1h-1zM27 36h1v1h-1zM28 36h1v1h-1zM29 36h1v1h-1zM31 36h1v1h-1zM34 36h1v1h-1zM36 36h1v1h-1zM37 36h1v1h-1zM38 36h1v1h-1zM39 36h1v1h-1zM40 36h1v1h-1zM42 36h1v1h-1zM43 36h1v1h-1zM12 37h1v1h-1zM14 37h1v1h-1zM17 37h1v1h-1zM18 37h1v1h-1zM20 37h1v1h-1zM24 37h1v1h-1zM26 37h1v1h-1zM27 37h1v1h-1zM32 37h1v1h-1zM33 37h1v1h-1zM35 37h1v1h-1zM36 37h1v1h-1zM40 37h1v1h-1zM41 37h1v1h-1zM43 37h1v1h-1zM44 37h1v1h-1zM4 38h1v1h-1zM5 38h1v1h-1zM6 38h1v1h-1zM7 38h1v1h-1zM8 38h1v1h-1zM9 38h1v1h-1zM10 38h1v1h-1zM13 38h1v1h-1zM14 38h1v1h-1zM15 38h1v1h-1zM18 38h1v1h-1zM20 38h1v1h-1zM23 38h1v1h-1zM24 38h1v1h-1zM25 38h1v1h-1zM29 38h1v1h-1zM30 38h1v1h-1zM32 38h1v1h-1zM36 38h1v1h-1zM38 38h1v1h-1zM40 38h1v1h-1zM42 38h1v1h-1zM43 38h1v1h-1zM4 39h1v1h-1zM10 39h1v1h-1zM13 39h1v1h-1zM14 39h1v1h-1zM17 39h1v1h-1zM20 39h1v1h-1zM23 39h1v1h-1zM24 39h1v1h-1zM25 39h1v1h-1zM31 39h1v1h-1zM32 39h1v1h-1zM35 39h1v1h-1zM36 39h1v1h-1zM40 39h1v1h-1zM42 39h1v1h-1zM4 40h1v1h-1zM6 40h1v1h-1zM7 40h1v1h-1zM8 40h1v1h-1zM10 40h1v1h-1zM13 40h1v1h-1zM14 40h1v1h-1zM16 40h1v1h-1zM20 40h1v1h-1zM24 40h1v1h-1zM25 40h1v1h-1zM26 40h1v1h-1zM27 40h1v1h-1zM31 40h1v1h-1zM32 40h1v1h-1zM33 40h1v1h-1zM34 40h1v1h-1zM36 40h1v1h-1zM37 40h1v1h-1zM38 40h1v1h-1zM39 40h1v1h-1zM40 40h1v1h-1zM4 41h1v1h-1zM6 41h1v1h-1zM7 41h1v1h-1zM8 41h1v1h-1zM10 41h1v1h-1zM12 41h1v1h-1zM13 41h1v1h-1zM16 41h1v1h-1zM22 41h1v1h-1zM23 41h1v1h-1zM29 41h1v1h-1zM30 41h1v1h-1zM33 41h1v1h-1zM37 41h1v1h-1zM38 41h1v1h-1zM40 41h1v1h-1zM4 42h1v1h-1zM6 42h1v1h-1zM7 42h1v1h-1zM8 42h1v1h-1zM10 42h1v1h-1zM15 42h1v1h-1zM16 42h1v1h-1zM18 42h1v1h-1zM19 42h1v1h-1zM21 42h1v1h-1zM23 42h1v1h-1zM24 42h1v1h-1zM26 42h1v1h-1zM27 42h1v1h-1zM35 42h1v1h-1zM40 42h1v1h-1zM41 42h1v1h-1zM44 42h1v1h-1zM4 43h1v1h-1zM10 43h1v1h-1zM13 43h1v1h-1zM14 43h1v1h-1zM16 43h1v1h-1zM20 43h1v1h-1zM21 43h1v1h-1zM23 43h1v1h-1zM26 43h1v1h-1zM29 43h1v1h-1zM31 43h1v1h-1zM33 43h1v1h-1zM34 43h1v1h-1zM35 43h1v1h-1zM36 43h1v1h-1zM38 43h1v1h-1zM39 43h1v1h-1zM41 43h1v1h-1zM43 43h1v1h-1zM4 44h1v1h-1zM5 44h1v1h-1zM6 44h1v1h-1zM7 44h1v1h-1zM8 44h1v1h-1zM9 44h1v1h-1zM10 44h1v1h-1zM13 44h1v1h-1zM15 44h1v1h-1zM16 44h1v1h-1zM18 44h1v1h-1zM19 44h1v1h-1zM20 44h1v1h-1zM24 44h1v1h-1zM25 44h1v1h-1zM26 44h1v1h-1zM27 44h1v1h-1zM30 44h1v1h-1zM31 44h1v1h-1zM33 44h1v1h-1zM34 44h1v1h-1zM36 44h1v1h-1zM38 44h1v1h-1zM39 44h1v1h-1zM40 44h1v1h-1zM43 44h1v1h-1z" fill="#4a2380"/></svg></div>
+        <div class="cl-card-info">
+          <div class="cl-card-head"><span class="cl-card-icon"><svg class="cl-ic" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.74v20.52C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.74V1.74C24 .78 23.2 0 22.22 0z"/></svg></span><span class="cl-card-title">Mon profil LinkedIn</span></div>
+          <div class="cl-card-text">Mohammed BEN SAID</div>
+          <div class="cl-card-scan"><span class="cl-scan-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg></span>Scannez pour me suivre</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
 </main>
 
 <!-- ────────── NOTES PANEL ────────── -->
@@ -6411,6 +6619,25 @@ body.notes-open .icon-btn#notes-btn {
     <!-- ════════ NOTES SLIDE 5 — REACT ════════ -->
     <div class="notes-content" data-notes="5">
       <div class="notes-section">
+        <div class="notes-eyebrow">L'idée à transmettre</div>
+        <p class="notes-p">Un agent IA est un <strong>système</strong> (« la boîte » entière), pas seulement un LLM. Au centre, l'agent ; autour, ses composants. Dire « le LLM est le cerveau » est correct et accessible.</p>
+      </div>
+      <div class="notes-section">
+        <div class="notes-eyebrow">Les composants (survol / clic — touches C / M / I / O)</div>
+        <ul class="notes-list">
+          <li><strong>Cerveau (LLM)</strong> — raisonne et décide. Seul, il ne fait que produire du texte.</li>
+          <li><strong>Mémoire</strong> — court terme (conversation) + long terme (entre sessions).</li>
+          <li><strong>Instructions</strong> — le persona + l'objectif (system prompt).</li>
+          <li><strong>Outils</strong> — les « mains » : API, base de données, recherche, code.</li>
+        </ul>
+      </div>
+      <div class="notes-section">
+        <div class="notes-eyebrow">Le raisonnement = une caractéristique (touche R)</div>
+        <p class="notes-p">Ce n'est pas un composant mais une <strong>capacité</strong> : raisonner et agir en autonomie. En pointant « Raisonnement », l'écran se scinde et montre la boucle <strong>Observation → Raisonnement → Action → …</strong> → <strong>Réponse finale</strong>. C'est le principe ReAct, détaillé à la slide suivante.</p>
+      </div>
+    </div>
+    <div class="notes-content" data-notes="6">
+      <div class="notes-section">
         <div class="notes-eyebrow">Le pattern</div>
         <h2 class="notes-h2">ReAct = <em>Reason + Act</em></h2>
         <p class="notes-p">
@@ -6488,7 +6715,7 @@ body.notes-open .icon-btn#notes-btn {
 
 
     <!-- ════════ NOTES SLIDE 6 — AGENT-AS-TOOL ════════ -->
-    <div class="notes-content" data-notes="6">
+    <div class="notes-content" data-notes="7">
       <div class="notes-section">
         <div class="notes-eyebrow">Le pattern</div>
         <h2 class="notes-h2"><em>Agent-as-Tool</em> : un agent dont les outils sont d'autres agents</h2>
@@ -6534,7 +6761,7 @@ body.notes-open .icon-btn#notes-btn {
       <div class="notes-section">
         <div class="notes-eyebrow">Le moment-clé pédagogique</div>
         <p class="notes-p">
-          À l'<strong>étape 9</strong>, quand le calendrier retourne les dates, l'agent décide de les sauvegarder en mémoire (<code>event_city, from_date, to_date</code>). Ces faits seront utilisables <strong>par le sous-agent Hotel</strong> lors de l'étape 16, et resteront disponibles si l'utilisateur revient demain pour modifier sa réservation.
+          À l'<strong>étape 9</strong>, le calendrier retourne l'événement complet : <code>event_name, city, from_date, to_date, participant</code>. La ville et les dates servent <strong>dans la session</strong> au sous-agent Hotel (étape 16). Mais en <strong>mémoire long terme</strong> (collection <code>users</code>), l'agent ne persiste que le fait <strong>durable</strong> — le participant (<code>Mohammed BEN SAID</code>) — réutilisable lors des prochaines conversations.
         </p>
       </div>
 
@@ -6561,7 +6788,7 @@ body.notes-open .icon-btn#notes-btn {
     </div>
 
     <!-- ════════ NOTES SLIDE 7 — MODERATOR ════════ -->
-    <div class="notes-content" data-notes="7">
+    <div class="notes-content" data-notes="8">
       <div class="notes-section">
         <div class="notes-eyebrow">Le pattern</div>
         <h2 class="notes-h2">Modérateur : <em>un mini-agent en gatekeeper</em></h2>
@@ -6634,98 +6861,86 @@ Refuse toute demande hors de ce périmètre.</div>
     </div>
 
     <!-- ════════ NOTES SLIDE 8 — JUDGE ════════ -->
-    <div class="notes-content" data-notes="8">
+    <div class="notes-content" data-notes="9">
       <div class="notes-section">
         <div class="notes-eyebrow">Le pattern</div>
-        <h2 class="notes-h2">Agent juge : <em>critic-actor</em></h2>
+        <h2 class="notes-h2">Collaboration multi-agents &amp; <em>agent juge</em></h2>
         <p class="notes-p">
-          On ajoute un agent <strong>juge</strong> qui évalue la réponse produite par l'agent principal <strong>avant qu'elle ne parte à l'utilisateur</strong>. Si le juge rejette, l'orchestrateur regénère avec le feedback du juge. C'est le pattern <strong>critic-actor</strong> : un acteur produit, un critique évalue, et l'acteur s'améliore.
+          L'<strong>orchestrateur</strong> ne fait pas tout lui-même : son LLM décide d'appeler des <strong>agents spécialisés</strong> via <code>tool_use</code>. Chaque outil est en réalité un <strong>agent complet</strong> (system prompt + son propre LLM). Ici deux outils : un <strong>Agent Voyage</strong> qui crée l'itinéraire, et un <strong>Agent Juge</strong> qui le valide.
         </p>
         <p class="notes-p">
-          Le juge est lui-même un agent (système prompt + LLM). Il ne fait <strong>aucune action sur le monde</strong> — son seul rôle est d'évaluer. Output : un JSON structuré <code>{decision, score, reasons}</code>.
+          Le juge applique le pattern <strong>critic-actor</strong> : un acteur produit (Voyage), un critique évalue (Juge) ; tant que c'est rejeté, l'acteur régénère avec les remarques. Le juge ne fait <strong>aucune action sur le monde</strong> — il évalue et renvoie un verdict structuré <code>{decision, score, criteria, feedback}</code>.
+        </p>
+      </div>
+
+      <div class="notes-section">
+        <div class="notes-eyebrow">Code couleur</div>
+        <p class="notes-p">
+          Chaque <strong>système</strong> = un agent + son LLM, d'une seule couleur : <strong>Orchestrateur en bleu</strong>, <strong>Agent Voyage en vert</strong>, <strong>Agent Juge en orange</strong>. Les self-loops (« LLM &rarr; outil », « LLM génère », « LLM analyse ») montrent que c'est bien le LLM <em>interne</em> à chaque agent qui raisonne. La sidebar reprend ce même code couleur.
         </p>
       </div>
 
       <div class="notes-section">
         <div class="notes-eyebrow">Le scénario</div>
-        <h3 class="notes-h3">Validation en sortie avec boucle de correction</h3>
+        <h3 class="notes-h3">« Prépare-moi un itinéraire de 2 jours pour visiter Paris »</h3>
         <p class="notes-p">
-          On reprend la fin du scénario du slide 6 : tout est réservé, l'orchestrateur prépare la réponse finale. Au lieu de l'envoyer directement à l'utilisateur, il la soumet au juge.
+          L'utilisateur s'adresse à l'orchestrateur. Son LLM décide d'appeler l'Agent Voyage (<code>tool_use</code>), qui génère une proposition avec son propre LLM, puis la renvoie. L'orchestrateur la fait alors évaluer par l'Agent Juge.
         </p>
         <p class="notes-p">
-          <strong>Try 1</strong> — L'orchestrateur produit une réponse trop brève : « Tout est réservé ! ». Le juge la rejette avec score 3/10, raisons : <em>missing_details, missing_dates, missing_followup</em>.
+          <strong>Try 1</strong> — proposition bâclée : « Jour 1 : Tour Eiffel, Louvre, Tour Eiffel. Jour 2 : Louvre. » Le juge rejette (<strong>4/10</strong>) : doublons, ordre incohérent, jour 2 trop léger. Il renvoie ses remarques à l'orchestrateur.
         </p>
         <p class="notes-p">
-          <strong>Try 2</strong> — L'orchestrateur regénère avec le feedback du juge. La nouvelle réponse contient toutes les références, dates et une question de relance. Le juge accepte avec score 9/10. La réponse part à l'utilisateur.
+          <strong>Try 2</strong> — l'orchestrateur transmet ces remarques à l'Agent Voyage, qui régénère un itinéraire équilibré et regroupé par quartier. Le juge accepte (<strong>9/10</strong>). L'orchestrateur envoie l'itinéraire final à l'utilisateur.
         </p>
       </div>
 
       <div class="notes-callout info">
-        <span class="notes-callout-label">Pourquoi le juge utilise le même modèle</span>
-        Le LLM principal et le LLM du juge sont <strong>le même modèle (Sonnet 4.5)</strong> — ce qui change, c'est le <strong>system prompt</strong>. Le principal a un rôle d'assistant ; le juge a un rôle de critique avec des critères précis. C'est suffisant pour qu'il apporte un regard différent : <strong>il n'a pas le biais d'avoir produit la réponse</strong>, donc il la juge avec plus de recul.
+        <span class="notes-callout-label">L'outil est un agent</span>
+        Du point de vue du LLM de l'orchestrateur, appeler l'Agent Voyage ou l'Agent Juge ressemble à un simple <code>tool_use</code>. Mais derrière chaque outil se cache un agent autonome avec son propre system prompt et son propre LLM. C'est le pattern <strong>agent-as-tool</strong> : on compose des agents comme on composerait des fonctions.
       </div>
 
       <div class="notes-section">
         <div class="notes-eyebrow">Le system prompt du juge</div>
-        <p class="notes-p">
-          Structuré, avec des critères explicites. Type :
-        </p>
-        <div class="notes-code">Tu es un évaluateur de qualité de réponses. Tu reçois :
-- une draft produite par un agent
-- le contexte (demande utilisateur, résultats d'outils)
+        <p class="notes-p">Structuré, avec des critères de cohérence explicites :</p>
+        <div class="notes-code">Tu es un évaluateur d'itinéraires. Tu reçois :
+- l'itinéraire proposé par l'Agent Voyage
+- la demande de l'utilisateur
 
-Évalue selon 3 critères :
-1. <span class="kw">completeness</span>: tous les éléments demandés sont-ils présents ?
-2. <span class="kw">accuracy</span>: les détails sont-ils corrects ?
-3. <span class="kw">actionability</span>: la réponse permet-elle de continuer ?
+Vérifie la cohérence :
+1. <span class="kw">Pas de doublons</span> (un lieu visité une seule fois)
+2. <span class="kw">Ordre logique</span> des visites (par quartier / proximité)
+3. <span class="kw">Durée réaliste</span>, jours équilibrés
 
 Réponds en JSON :
 {
   "decision": "ACCEPT" | "REJECT",
   "score": 0-10,
-  "reasons": [{"type": "...", "text": "..."}]
+  "criteria": [ { "label": "...", "ok": true | false }, ... ],
+  "feedback": "remarques de correction (si REJECT)"
 }
 
-Seuil : <span class="kw">score &ge; 7</span> → ACCEPT.</div>
+Seuil : <span class="kw">score &ge; 7</span> &rarr; ACCEPT, sinon REJECT + feedback.</div>
       </div>
 
       <div class="notes-section">
         <div class="notes-eyebrow">Le coût caché</div>
         <p class="notes-p">
-          La boucle critic-actor <strong>double ou triple le coût en tokens</strong>. Chaque retry = un appel LLM principal + un appel LLM juge supplémentaires. Pour une réponse, on a maintenant 2 appels au LLM principal + 2 appels au LLM juge = <strong>4 appels au lieu de 1</strong>.
-        </p>
-        <p class="notes-p">
-          C'est acceptable pour des <strong>cas critiques</strong> (réponses utilisateur final, contenus sensibles, décisions importantes). Pas pour des opérations à haute volumétrie où la latence prime.
+          Chaque itération mobilise <strong>plusieurs agents</strong> : l'Agent Voyage (génération) + l'Agent Juge (évaluation), chacun avec son appel LLM, plus les décisions de l'orchestrateur. Un rejet <strong>double</strong> tout ce travail.
         </p>
         <div class="notes-callout warn">
-          <span class="notes-callout-label">Limite max de retries</span>
-          Toujours fixer un <strong>nombre max d'itérations</strong> (2 ou 3). Sinon, si le juge n'est jamais content, la boucle ne s'arrête plus. Au bout du nombre max, soit on accepte la dernière draft, soit on remonte une erreur à un humain.
+          <span class="notes-callout-label">Limite max d'itérations</span>
+          Toujours fixer un <strong>nombre max de boucles</strong> (2 ou 3). Sinon, si le juge n'est jamais satisfait, la boucle ne s'arrête plus. Au bout du max : on accepte la dernière proposition, ou on remonte à un humain.
         </div>
-      </div>
-
-      <div class="notes-section">
-        <div class="notes-eyebrow">Variantes du pattern</div>
-        <ul class="notes-list">
-          <li><strong>Judge en entrée</strong> — c'est le modérateur du slide précédent.</li>
-          <li><strong>Judge en sortie</strong> — c'est celui-ci, validation avant envoi à l'utilisateur.</li>
-          <li><strong>Judge sur sous-agent</strong> — un juge évalue le livrable d'un sous-agent spécifique (ex: HotelAgent doit produire une proposition pertinente avant que l'orchestrateur l'accepte).</li>
-          <li><strong>Judge offline</strong> — un juge tourne en arrière-plan sur les conversations sauvegardées pour scorer la qualité globale et alerter en cas de régression. Pas visible côté utilisateur.</li>
-        </ul>
       </div>
 
       <div class="notes-callout tip">
         <span class="notes-callout-label">À retenir</span>
-        Le juge est un <strong>filet de sécurité qualité</strong>. Il ne change pas ce que l'agent fait, il <strong>améliore ce qu'il rend</strong>. C'est un pattern peu coûteux à mettre en place (un agent en plus, un system prompt), mais qui change la perception qualitative de l'assistant en production.
-      </div>
-
-      <div class="notes-callout warn">
-        <span class="notes-callout-label">Anti-pattern</span>
-        Utiliser le juge pour <strong>compenser un mauvais agent principal</strong>. Si l'agent produit constamment des draft de mauvaise qualité, c'est son prompt qu'il faut améliorer, pas une boucle critic-actor en aval. Le juge est là pour <em>rattraper l'occasionnel</em>, pas pour <em>corriger le systémique</em>.
+        Trois idées en une slide : <strong>(1)</strong> un orchestrateur délègue à des agents spécialisés via <code>tool_use</code> ; <strong>(2)</strong> chaque agent a son propre LLM (même couleur = même système) ; <strong>(3)</strong> un agent juge fiabilise le résultat via une boucle critic-actor avant l'envoi à l'utilisateur.
       </div>
     </div>
 
     <!-- ════════ NOTES SLIDE 9 — SEQUENTIAL ════════ -->
-    <div class="notes-content" data-notes="9">
+    <div class="notes-content" data-notes="10">
       <div class="notes-section">
         <div class="notes-eyebrow">Le pattern</div>
         <h2 class="notes-h2">Sequential : <em>un pipeline d'étapes</em></h2>
@@ -6817,7 +7032,7 @@ workflow = SequentialBuilder(participants=[
     </div>
 
     <!-- ════════ NOTES SLIDE 10 — CONCURRENT ════════ -->
-    <div class="notes-content" data-notes="10">
+    <div class="notes-content" data-notes="11">
       <div class="notes-section">
         <div class="notes-eyebrow">Le pattern</div>
         <h2 class="notes-h2">Concurrent : <em>fan-out / fan-in</em></h2>
@@ -6893,7 +7108,7 @@ await run.TrySendMessageAsync(new TurnToken(emitEvents: true));
     </div>
 
     <!-- ════════ NOTES SLIDE 11 — GROUP CHAT (PROMPT-BASED) ════════ -->
-    <div class="notes-content" data-notes="11">
+    <div class="notes-content" data-notes="12">
       <div class="notes-section">
         <div class="notes-eyebrow">Le pattern</div>
         <h2 class="notes-h2">Group Chat : <em>sélection par prompt</em></h2>
@@ -6977,7 +7192,7 @@ workflow = GroupChatBuilder(
     </div>
 
     <!-- ════════ NOTES SLIDE 12 — HANDOFF ════════ -->
-    <div class="notes-content" data-notes="12">
+    <div class="notes-content" data-notes="13">
       <div class="notes-section">
         <div class="notes-eyebrow">Le pattern</div>
         <h2 class="notes-h2">Handoff : <em>relais direct entre agents</em></h2>
@@ -7023,6 +7238,150 @@ workflow = GroupChatBuilder(
         Ici, les règles de handoff sont définies à l'avance. Quand le <strong>plan lui-même</strong> doit être conçu dynamiquement par un agent chef d'orchestre — décomposer, déléguer, vérifier, replanifier — c'est le pattern <strong>Magentic</strong>, le plus avancé — slide suivante.
       </div>
     </div>
+      <div class="notes-content" data-notes="14">
+        <div class="notes-section">
+          <div class="notes-eyebrow">La synthèse</div>
+          <h2 class="notes-h2">Choisir la bonne approche</h2>
+          <p class="notes-p">Le fil rouge, partagé par les équipes qui déploient ces systèmes en production : <strong>commencer par la solution la plus simple, et n'ajouter de la complexité que lorsqu'elle apporte un gain réel</strong>. Chaque niveau d'autonomie supplémentaire gagne en puissance, mais ajoute aussi de la latence, du coût en tokens et un risque d'erreur qui peut se propager.</p>
+        </div>
+        <div class="notes-section">
+          <div class="notes-eyebrow">Deux questions, trois réponses</div>
+          <p class="notes-p"><strong>Q1 &mdash; un simple appel suffit-il ?</strong> Génération pure (rédiger, traduire, résumer, classer) sans données externes ni action &rarr; <strong>LLM direct</strong>. Le cas le plus fréquent : le plus rapide et le moins cher.</p>
+          <p class="notes-p"><strong>Q2 &mdash; une seule IA équipée d'outils suffit-elle ?</strong> Besoin d'outils, de données réelles ou de plusieurs étapes, mais sur un seul domaine &rarr; <strong>agent (boucle ReAct)</strong>.</p>
+          <p class="notes-p"><strong>Sinon</strong> &rarr; <strong>multi-agents</strong> : un orchestrateur délègue à des agents spécialisés et un agent juge fiabilise la sortie. Plus puissant, mais plus coûteux — à réserver aux tâches vraiment complexes.</p>
+        </div>
+        <div class="notes-callout tip">
+          <span class="notes-callout-label">À retenir</span>
+          La bonne question n'est pas « quelle est l'architecture la plus avancée ? » mais « quelle est la plus simple qui répond au besoin ? ». On monte d'un cran uniquement quand le cran précédent ne suffit plus.
+        </div>
+      </div>
+      <div class="notes-content" data-notes="15">
+        <div class="notes-section">
+          <div class="notes-eyebrow">Clôture</div>
+          <h2 class="notes-h2">Questions &amp; contact</h2>
+          <p class="notes-p">Slide d'ouverture aux échanges. Deux QR codes, volontairement séparés et color-codés pour éviter toute confusion : le <strong>bleu</strong> renvoie à l'article Medium (« Fine-Tuning vs RAG »), le <strong>violet</strong> au profil LinkedIn.</p>
+          <p class="notes-p">Invitez le public à scanner pendant les questions — les codes restent affichés tout du long.</p>
+        </div>
+      </div>
+  </div>
+</aside>
+
+<aside class="script-panel" id="script-panel" aria-hidden="true">
+  <div class="script-header">
+    <div class="script-header-left">
+      <div class="script-header-eyebrow">Script · Slide <span id="script-slide-num">1</span></div>
+      <div class="script-header-title" id="script-slide-title">L'IA dans le produit</div>
+    </div>
+    <button class="script-close" id="script-close" aria-label="Fermer le script" title="Fermer (S ou Échap)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="script-body" id="script-body">
+      <div class="script-content active" data-script="1">
+        <p class="script-line">Bonjour à tous. Aujourd'hui, on va parler d'une question qui se pose dès qu'on veut mettre de l'IA dans un produit : quelle architecture choisir ?</p>
+        <p class="script-line">Parce qu'intégrer un modèle, ce n'est pas simplement « brancher un LLM ». Selon le besoin, on peut aller du plus simple — un seul appel au modèle — jusqu'à de vraies équipes d'agents qui travaillent ensemble.</p>
+        <p class="script-line">Pendant les vingt prochaines minutes, on va suivre ce chemin, étape par étape, avec des schémas et des exemples concrets. Je m'appuierai sur le Microsoft Agent Framework pour illustrer.</p>
+      </div>
+
+      <div class="script-content" data-script="2">
+        <p class="script-line">Voici comment on va avancer, en trois parties.</p>
+        <p class="script-line">D'abord, l'approche non agentique : un simple appel au modèle, et comment le prompting permet d'en tirer le maximum.</p>
+        <p class="script-line">Ensuite, l'approche agentique : on donne au modèle des outils, une mémoire et une boucle pour agir. C'est là qu'on parle vraiment d'« agent ».</p>
+        <p class="script-line">Et enfin, l'orchestration : comment faire collaborer plusieurs agents, avec des patterns éprouvés.</p>
+        <p class="script-line">L'idée à garder en tête tout du long : il n'y a pas d'approche meilleure dans l'absolu. On choisit la plus simple qui résout le problème.</p>
+      </div>
+
+      <div class="script-content" data-script="3">
+        <p class="script-line">Commençons par le plus simple : l'appel direct au LLM.</p>
+        <p class="script-line">L'utilisateur pose une question, le modèle génère sa réponse, mot à mot, et c'est terminé. Un appel, un résultat.</p>
+        <p class="script-line">C'est parfait pour traduire, résumer ou reformuler — tout ce qui tient en une seule génération.</p>
+        <p class="script-line">L'avantage, c'est que c'est rapide et qu'il n'y a aucune infrastructure à gérer. La limite, c'est que le modèle ne fait que produire du texte : il n'a accès à rien d'autre que ce qu'on lui donne, et il ne peut pas agir sur le monde.</p>
+        <p class="script-cue">Vous pouvez lancer l'animation pour montrer le déroulé étape par étape.</p>
+      </div>
+
+      <div class="script-content" data-script="4">
+        <p class="script-line">Avant d'ajouter de la complexité, on peut déjà beaucoup améliorer la réponse, simplement en soignant le prompt.</p>
+        <p class="script-line">Le message de l'utilisateur n'est pas envoyé tel quel : on l'enrichit. On fixe un rôle avec le system prompt, on donne quelques exemples avec le few-shot, et on injecte des informations utiles avec un RAG — par exemple le contenu d'un document qui regroupe les politiques de l'entreprise : retour, remboursement, annulation.</p>
+        <p class="script-line">Tout ça forme le prompt final. Le modèle raisonne dessus, puis renvoie une réponse structurée, ici en JSON, directement exploitable.</p>
+        <p class="script-cue">Dérouler la démo, puis ouvrir le bouton « Prompt complet » pour montrer ce qui est réellement envoyé au modèle.</p>
+        <p class="script-line">Le point important : on reste dans une seule génération. Le prompting améliore la réponse, mais il ne rend pas le modèle agentique — toujours pas d'outil, pas d'action sur le monde.</p>
+      </div>
+
+      <div class="script-content" data-script="5">
+        <p class="script-line">Posons une définition simple : un agent IA, ce n'est pas seulement un LLM, c'est un système — une boîte qui assemble plusieurs éléments.</p>
+        <p class="script-line">Au centre, l'agent. Autour, ses composants : un cerveau, c'est le LLM ; une mémoire, pour garder le contexte ; des instructions, son persona et son objectif ; et des outils, ses mains pour agir.</p>
+        <p class="script-cue">Clic ou touches C / M / I / O pour mettre chaque composant en évidence.</p>
+        <p class="script-line">Le raisonnement, lui, n'est pas un composant : c'est une caractéristique de l'agent — sa capacité à raisonner et agir en autonomie.</p>
+        <p class="script-cue">Touche R (ou clic sur la caractéristique) : l'écran se scinde et affiche la boucle ReAct ; R à nouveau pour revenir au schéma centré.</p>
+        <p class="script-line">Cette boucle, c'est : il observe, il raisonne, il agit avec un outil, il observe le résultat, et il recommence — jusqu'à donner sa réponse finale. On la détaille tout de suite.</p>
+      </div>
+      <div class="script-content" data-script="6">
+        <p class="script-line">On passe maintenant à l'approche agentique. Premier cas : un seul agent.</p>
+        <p class="script-line">Ici, le modèle peut décider d'utiliser des outils. Il dit « j'ai besoin de chercher la météo », l'agent exécute l'outil, récupère le résultat, et redonne la main au modèle. On boucle ainsi jusqu'à la réponse finale.</p>
+        <p class="script-line">Et voici le point clé, souvent mal compris : le LLM n'a pas de mémoire entre deux appels. C'est l'agent qui joue ce rôle. À chaque appel, il reconstruit et renvoie tout le contexte : le system prompt, les outils, l'historique, les appels d'outils précédents et leurs résultats.</p>
+        <p class="script-line">Donc on ne renvoie pas seulement le dernier résultat : on renvoie tout, à chaque fois.</p>
+        <p class="script-cue">Montrer la carte « Contexte renvoyé au LLM » à droite, qui s'allume à chaque appel.</p>
+      </div>
+
+      <div class="script-content" data-script="7">
+        <p class="script-line">On peut aller plus loin. Au lieu de simples outils, l'agent principal utilise d'autres agents spécialisés : un pour le calendrier, un pour les vols, un pour les hôtels.</p>
+        <p class="script-line">Pour l'agent principal, ces sous-agents sont des outils comme les autres : il les appelle, récupère leurs résultats, et poursuit son raisonnement.</p>
+        <p class="script-line">Nouveauté ici : l'agent gère aussi sa propre mémoire, distincte de l'historique de conversation. Il se souvient des préférences de l'utilisateur d'une fois sur l'autre.</p>
+        <p class="script-line">Et comme tout à l'heure, à chaque appel il renvoie l'ensemble du contexte au modèle : system prompt, outils, historique, mémoire, et les résultats des sous-agents déjà appelés.</p>
+      </div>
+
+      <div class="script-content" data-script="8">
+        <p class="script-line">Quand on met un agent en production, il faut le protéger. Premier garde-fou : à l'entrée.</p>
+        <p class="script-line">Avant même que la requête n'atteigne l'agent principal, un petit agent classifieur la vérifie. Si elle est hors sujet ou problématique, il la bloque tout de suite.</p>
+        <p class="script-line">C'est léger, c'est rapide, et ça évite que l'agent principal traite des demandes qui ne le concernent pas.</p>
+      </div>
+
+      <div class="script-content" data-script="9">
+        <p class="script-line">Mettons tout ça ensemble avec un exemple simple : « Prépare-moi un itinéraire de 2 jours pour visiter Paris. »</p>
+        <p class="script-line">L'orchestrateur ne rédige pas l'itinéraire lui-même. Son LLM décide d'appeler un outil — qui est en fait un agent spécialisé, l'Agent Voyage, avec son propre LLM. Celui-ci génère une proposition et la renvoie.</p>
+        <p class="script-line">L'orchestrateur la fait alors valider par un second agent : l'Agent Juge. Il vérifie la cohérence — pas de doublons, un ordre logique, une durée réaliste. La première version est bâclée : Tour Eiffel et Louvre en double, jour 2 presque vide. Le juge rejette, avec des remarques.</p>
+        <p class="script-line">L'orchestrateur renvoie ces remarques à l'Agent Voyage, qui régénère. Cette fois le juge valide, et l'itinéraire final part à l'utilisateur.</p>
+        <p class="script-line">Remarquez le code couleur : chaque agent et son LLM partagent une couleur — bleu, vert, orange — pour montrer qu'ils forment un même système.</p>
+      </div>
+
+      <div class="script-content" data-script="10">
+        <p class="script-line">On entre dans la dernière partie : l'orchestration de plusieurs agents.</p>
+        <p class="script-line">Le premier pattern, le plus simple, c'est le séquentiel. C'est une chaîne d'étapes, où chaque étape utilise le résultat de la précédente.</p>
+        <p class="script-line">Et on peut mélanger des agents IA et du code classique : tout ne mérite pas un appel au modèle. L'exemple ici, c'est un assistant de tri des déchets, où chaque étape affine le résultat de l'étape d'avant.</p>
+      </div>
+
+      <div class="script-content" data-script="11">
+        <p class="script-line">Le pattern concurrent, lui, fait travailler plusieurs agents en parallèle sur la même entrée.</p>
+        <p class="script-line">On envoie la même donnée à plusieurs agents en même temps — c'est le fan-out — puis on rassemble leurs résultats — c'est le fan-in.</p>
+        <p class="script-line">C'est idéal quand on veut analyser quelque chose sous plusieurs angles d'un coup. Ici, l'exemple est l'enrichissement d'un avis client après un achat confirmé : plusieurs agents l'analysent chacun de leur côté.</p>
+      </div>
+
+      <div class="script-content" data-script="12">
+        <p class="script-line">Avec le group chat, on a plusieurs agents autour de la table, et un manager qui orchestre la discussion.</p>
+        <p class="script-line">Le manager lit la conversation et choisit, à chaque tour, quel agent doit intervenir. C'est une sélection pilotée par son prompt de coordination.</p>
+        <p class="script-line">L'exemple, c'est un assistant de support client : le manager aiguille la demande vers le bon spécialiste, selon ce qui se dit dans l'échange.</p>
+      </div>
+
+      <div class="script-content" data-script="13">
+        <p class="script-line">Dernier pattern : le handoff, le passage de relais.</p>
+        <p class="script-line">Ici, plus de chef d'orchestre. Les agents se transfèrent la main directement : chacun décide s'il traite la demande, ou s'il la passe à un collègue mieux placé.</p>
+        <p class="script-line">Le prochain agent dépend donc du contenu, et non d'une séquence figée. L'exemple, c'est un support bancaire, où la demande circule jusqu'à l'agent capable d'y répondre.</p>
+        <p class="script-line">Et voilà le panorama complet : du simple appel LLM jusqu'aux équipes d'agents. À chaque fois, la bonne question n'est pas « quelle est la techno la plus avancée ? », mais « quelle est l'architecture la plus simple qui répond à mon besoin ? ». Merci à tous — je suis disponible pour vos questions.</p>
+      </div>
+      <div class="script-content" data-script="14">
+        <p class="script-line">Pour conclure : comment choisir entre ces trois approches ? Tout tient en deux questions.</p>
+        <p class="script-line">Première question : un simple appel au modèle suffit-il ? Si vous voulez juste générer, traduire, résumer ou classer, sans outils ni données externes — le LLM direct suffit. Le plus simple, le plus rapide, le moins cher, et ça couvre la grande majorité des cas.</p>
+        <p class="script-line">Sinon, deuxième question : une seule IA équipée d'outils peut-elle faire le travail ? Si oui, c'est un agent — la boucle ReAct, qui raisonne et agit en autonomie sur un domaine.</p>
+        <p class="script-line">Et seulement si vous avez besoin de plusieurs expertises ou d'une validation, vous passez au multi-agents : un orchestrateur, des agents spécialisés, et un juge.</p>
+        <p class="script-line">Le fil rouge de toute la présentation : on commence simple, et on ajoute de la complexité seulement quand le besoin le justifie. Merci à toutes et à tous !</p>
+      </div>
+      <div class="script-content" data-script="15">
+        <p class="script-line">Et c'est tout pour moi — place à vos questions !</p>
+        <p class="script-line">Si vous voulez approfondir, deux QR codes sont à l'écran : celui de gauche, en bleu, pointe vers mon article Medium qui compare le fine-tuning et le RAG de façon simple ; celui de droite, en violet, vers mon profil LinkedIn pour rester en contact.</p>
+        <p class="script-line">N'hésitez pas à les scanner dès maintenant, ils resteront affichés. Merci à toutes et à tous !</p>
+      </div>
   </div>
 </aside>
 
@@ -7046,6 +7405,9 @@ workflow = GroupChatBuilder(
   <span style="margin: 0 4px;">·</span>
   <span class="kbd">N</span>
   <span>notes</span>
+  <span style="margin: 0 4px;">·</span>
+  <span class="kbd">S</span>
+  <span>script</span>
   <span style="margin: 0 4px;">·</span>
   <span class="kbd">T</span>
   <span>thème</span>
@@ -7214,6 +7576,7 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
     document.getElementById('next-btn').disabled = (n === total);
     current = n;
     syncNotes(n);
+    syncScript(n);
     setTimeout(() => { transitioning = false; }, 600);
   }
 
@@ -7236,9 +7599,14 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
     } else if (e.key === 't' || e.key === 'T') { toggleTheme(); }
     else if (e.key === 'f' || e.key === 'F') { toggleFullscreen(); }
     else if (e.key === 'n' || e.key === 'N') { toggleNotes(); }
+    else if (e.key === 's' || e.key === 'S') { toggleScript(); }
     else if (e.key === 'Escape' && document.body.classList.contains('notes-open')) {
       e.preventDefault();
       toggleNotes();
+    }
+    else if (e.key === 'Escape' && document.body.classList.contains('script-open')) {
+      e.preventDefault();
+      toggleScript();
     }
   });
 
@@ -7277,14 +7645,17 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
     2: "Le plan — trois parties",
     3: "Le LLM direct",
     4: "Prompting avancé",
-    5: "Mono-agent : la boucle ReAct",
-    6: "Multi-agent : l'agent-as-tool",
-    7: "Garde-fou en entrée : le modérateur",
-    8: "Garde-fou en sortie : l'agent juge",
-    9: "MS Agent Framework — Sequential",
-    10: "MS Agent Framework — Concurrent",
-    11: "MS Agent Framework — Group Chat",
-    12: "MS Agent Framework — Handoff"
+    5: "Qu'est-ce qu'un agent IA ?",
+    6: "Mono-agent : la boucle ReAct",
+    7: "Multi-agent : l'agent-as-tool",
+    8: "Garde-fou en entrée : le modérateur",
+    9: "Garde-fou en sortie : l'agent juge",
+    10: "MS Agent Framework — Sequential",
+    11: "MS Agent Framework — Concurrent",
+    12: "MS Agent Framework — Group Chat",
+    13: "MS Agent Framework — Handoff",
+    14: "Quelle approche choisir ?",
+    15: "Questions ?"
   };
 
   function syncNotes(n) {
@@ -7308,9 +7679,40 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
     panel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
     localStorage.setItem('orchestre-notes-open', isOpen ? '1' : '0');
     document.getElementById('notes-btn').classList.toggle('has-notes', !isOpen);
+    if (isOpen) closeScriptPanel();
   }
   document.getElementById('notes-btn').addEventListener('click', toggleNotes);
   document.getElementById('notes-close').addEventListener('click', toggleNotes);
+
+  // ── Panneau Script (texte de présentation) ──
+  function syncScript(n) {
+    document.querySelectorAll('.script-content').forEach((el) => {
+      el.classList.toggle('active', parseInt(el.dataset.script, 10) === n);
+    });
+    const t = document.getElementById('script-slide-title');
+    const num = document.getElementById('script-slide-num');
+    if (t) t.textContent = slideTitles[n] || '';
+    if (num) num.textContent = n;
+    const body = document.getElementById('script-body');
+    if (body) body.scrollTop = 0;
+  }
+  function closeScriptPanel() {
+    document.body.classList.remove('script-open');
+    const sp = document.getElementById('script-panel');
+    if (sp) sp.setAttribute('aria-hidden', 'true');
+    const sb = document.getElementById('script-btn');
+    if (sb) sb.classList.remove('is-on');
+  }
+  function toggleScript() {
+    const willOpen = !document.body.classList.contains('script-open');
+    if (willOpen && document.body.classList.contains('notes-open')) toggleNotes();
+    document.body.classList.toggle('script-open', willOpen);
+    const sp = document.getElementById('script-panel');
+    if (sp) sp.setAttribute('aria-hidden', willOpen ? 'false' : 'true');
+    document.getElementById('script-btn').classList.toggle('is-on', willOpen);
+  }
+  document.getElementById('script-btn').addEventListener('click', toggleScript);
+  document.getElementById('script-close').addEventListener('click', toggleScript);
 
   // Restore notes state from previous session
   if (localStorage.getItem('orchestre-notes-open') === '1') {
@@ -7319,6 +7721,7 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
     document.getElementById('notes-btn').classList.remove('has-notes');
   }
   syncNotes(1);
+  syncScript(1);
 
   let idleTimer;
   function resetIdle() {
@@ -7711,28 +8114,28 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
     {
       iter: 1, phase: 'req-llm',
       title: 'Agent → LLM (1er appel)',
-      detail: "L'agent envoie au LLM :\n\n• system prompt\n• user query\n• tools spec (search_web, get_weather)\n\nLe LLM est sans mémoire : c'est l'agent qui assemble et envoie tout le contexte.",
+      detail: "L'agent envoie au LLM :\n\n• system prompt\n• user query\n• tools spec (geocode_location, get_weather)\n\nLe LLM est sans mémoire : c'est l'agent qui assemble et envoie tout le contexte.",
       arrows: ['arr-2'], labels: ['lbl-2'],
       activations: ['act-agent', 'act-llm-1'],
     },
     {
       iter: 1, phase: 'res-llm',
       title: 'LLM → Agent (suggestion d\'outil)',
-      detail: "Le LLM répond par une suggestion d\'appel d\'outil — pas par du texte.\n\ntool_use: {\n  name: \"search_web\",\n  args: { query: \"météo Paris demain\" }\n}\n\nLe LLM ne fait que suggérer — il n\'exécute rien.",
+      detail: "Le LLM répond par une suggestion d\'appel d\'outil — pas par du texte.\n\ntool_use: {\n  name: \"geocode_location\",\n  args: { location: \"Paris\" }\n}\n\nLe LLM ne fait que suggérer — il n\'exécute rien.",
       arrows: ['arr-3'], labels: ['lbl-3'],
       activations: ['act-agent', 'act-llm-1'],
     },
     {
       iter: 1, phase: 'req-tool',
       title: 'Agent → Tool (exécution)',
-      detail: "C\'est l\'agent qui exécute vraiment l\'outil suggéré.\n\nsearch_web(query=\"météo Paris demain\")\n\nLe LLM est complètement hors du circuit ici.",
+      detail: "C\'est l\'agent qui exécute vraiment l\'outil suggéré.\n\ngeocode_location(location=\"Paris\")\n\nLe LLM est complètement hors du circuit ici.",
       arrows: ['arr-4'], labels: ['lbl-4'],
       activations: ['act-agent', 'act-tool-1'],
     },
     {
       iter: 1, phase: 'res-tool',
       title: 'Tool → Agent (résultat 1)',
-      detail: "L\'outil renvoie sa réponse à l\'agent.\n\n→ \"Paris, France. Coordonnées 48.85°N, 2.35°E.\"",
+      detail: "L\'outil de géocodage renvoie les coordonnées du lieu.\n\n→ { name: \"Paris, FR\", lat: 48.85, lon: 2.35 }",
       arrows: ['arr-5'], labels: ['lbl-5'],
       activations: ['act-agent', 'act-tool-1'],
     },
@@ -8059,14 +8462,14 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
       title: 'Agent → User (question)',
       arrows: ['s6-arr-4'], labels: ['s6-lbl-4'],
       activations: ['s6-act-agent'],
-      chat: { role: 'assistant', text: "Bien sûr ! Quelle est la durée de votre séjour ?" },
+      chat: { role: 'assistant', text: "Bien sûr ! Dans quelle ville souhaitez-vous séjourner et pour quelle durée ?" },
     },
     {
       phase: 'user-msg',
       title: 'User → Agent (2)',
       arrows: ['s6-arr-5'], labels: ['s6-lbl-5'],
       activations: ['s6-act-agent'],
-      chat: { role: 'user', text: "C'est pour l'événement Dev With AI à Bordeaux." },
+      chat: { role: 'user', text: "C'est pour assister à l'événement Dev With AI." },
     },
     {
       phase: 'req-llm',
@@ -8092,10 +8495,7 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
       arrows: ['s6-arr-9'], labels: ['s6-lbl-9'],
       activations: ['s6-act-agent', 's6-act-cal'],
       memory: {
-        event_name: '"Dev With AI"',
-        event_city: '"Bordeaux"',
-        from_date: '"2026-03-15"',
-        to_date: '"2026-03-17"',
+        participant: '"Mohammed BEN SAID"',
       },
     },
     {
@@ -8238,7 +8638,19 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
     }
     // Auto-scroll
     s6ChatLog.scrollTop = s6ChatLog.scrollHeight;
-    if (s6ChatCount) s6ChatCount.textContent = chatCount;
+    // Messages réellement persistés en base (sessions) : inclut les échanges internes agent↔LLM
+    // (réponses du LLM = tool_use, et résultats d'outils/sous-agents).
+    let stored = 0;
+    for (let j = 0; j <= uptoStep; j++) {
+      const s = S6_STEPS[j];
+      if (!s) continue;
+      if (s.chat && s.chat.role === 'user') stored++;
+      else if (s.phase === 'res-llm') stored++;
+      else if (s.phase === 'res-tool' || s.phase === 'res-subagent') stored++;
+    }
+    if (s6ChatCount) s6ChatCount.textContent = stored;
+    const s6Note = document.getElementById('s6-chat-note');
+    if (s6Note) s6Note.textContent = chatCount ? (' · ' + chatCount + ' visible' + (chatCount > 1 ? 's' : '') + ' dans le chat') : '';
   }
 
   function s6BuildMemory(uptoStep, currentStep) {
@@ -8312,7 +8724,7 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
     if (s6StepCurrentEl) s6StepCurrentEl.textContent = s6State.step + 1;
 
     // Progress bar
-    document.querySelectorAll('.s6-progress-seg').forEach((s, i) => {
+    document.querySelectorAll('#s6-progress-fill .s6-progress-seg').forEach((s, i) => {
       s.classList.remove('done', 'current');
       if (i < s6State.step) s.classList.add('done');
       else if (i === s6State.step) s.classList.add('current');
@@ -8685,121 +9097,22 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
   // SLIDE 8 — JUDGE AGENT (critic-actor with retry)
   // ────────────────────────────────────────────
   const S8_STEPS = [
-    {
-      phase: 'req-llm',
-      title: 'Orchestrator → LLM (génère draft 1)',
-      arrows: ['s8-arr-1'], labels: ['s8-lbl-1'],
-      activations: ['s8-act-orch', 's8-act-llm-1'],
-      tryNum: 1,
-    },
-    {
-      phase: 'res-llm',
-      title: 'LLM → Orchestrator (draft 1 produit)',
-      arrows: ['s8-arr-2'], labels: ['s8-lbl-2'],
-      activations: ['s8-act-orch', 's8-act-llm-1'],
-      tryNum: 1,
-      draft: { try: 1, text: "Tout est réservé !" },
-    },
-    {
-      phase: 'req-judge',
-      title: 'Orchestrator → Judge (soumet draft 1)',
-      arrows: ['s8-arr-3'], labels: ['s8-lbl-3'],
-      activations: ['s8-act-orch', 's8-act-judge-1'],
-      tryNum: 1,
-      tryStatus: { 1: 'pending' },
-    },
-    {
-      phase: 'req-llm-judge',
-      title: 'Judge → LLM (évalue draft 1)',
-      arrows: ['s8-arr-4'], labels: ['s8-lbl-4'],
-      activations: ['s8-act-orch', 's8-act-judge-1', 's8-act-llmj-1'],
-      tryNum: 1,
-    },
-    {
-      phase: 'res-llm-judge',
-      title: 'LLM → Judge (verdict: REJECT)',
-      arrows: ['s8-arr-5'], labels: ['s8-lbl-5'],
-      activations: ['s8-act-orch', 's8-act-judge-1', 's8-act-llmj-1'],
-      tryNum: 1,
-      verdict: {
-        decision: 'REJECT',
-        score: 3,
-        reasons: [
-          { type: 'missing_details', text: 'aucune référence de réservation' },
-          { type: 'missing_dates', text: 'les dates ne sont pas confirmées' },
-          { type: 'missing_followup', text: 'aucune question pour la suite' },
-        ],
-      },
-    },
-    {
-      phase: 'rejected-judge',
-      title: 'Judge → Orchestrator (REJECT + feedback)',
-      arrows: ['s8-arr-6'], labels: ['s8-lbl-6'],
-      activations: ['s8-act-orch', 's8-act-judge-1'],
-      tryNum: 1,
-      tryStatus: { 1: 'rejected' },
-    },
-    {
-      phase: 'req-llm',
-      title: 'Orchestrator → LLM (retry avec feedback)',
-      arrows: ['s8-arr-7'], labels: ['s8-lbl-7'],
-      activations: ['s8-act-orch', 's8-act-llm-2'],
-      tryNum: 2,
-      tryStatus: { 2: 'pending' },
-    },
-    {
-      phase: 'res-llm',
-      title: 'LLM → Orchestrator (draft 2 amélioré)',
-      arrows: ['s8-arr-8'], labels: ['s8-lbl-8'],
-      activations: ['s8-act-orch', 's8-act-llm-2'],
-      tryNum: 2,
-      draft: { try: 2, text: "Tout est réservé ! Vol AF1234 (Paris → Bordeaux le 15 mars) et Hôtel Mercure (15-17 mars, confirmation ABC789). Veux-tu recevoir les billets par email ?" },
-    },
-    {
-      phase: 'req-judge',
-      title: 'Orchestrator → Judge (soumet draft 2)',
-      arrows: ['s8-arr-9'], labels: ['s8-lbl-9'],
-      activations: ['s8-act-orch', 's8-act-judge-2'],
-      tryNum: 2,
-    },
-    {
-      phase: 'req-llm-judge',
-      title: 'Judge → LLM (évalue draft 2)',
-      arrows: ['s8-arr-10'], labels: ['s8-lbl-10'],
-      activations: ['s8-act-orch', 's8-act-judge-2', 's8-act-llmj-2'],
-      tryNum: 2,
-    },
-    {
-      phase: 'res-llm-judge',
-      title: 'LLM → Judge (verdict: ACCEPT)',
-      arrows: ['s8-arr-11'], labels: ['s8-lbl-11'],
-      activations: ['s8-act-orch', 's8-act-judge-2', 's8-act-llmj-2'],
-      tryNum: 2,
-      verdict: {
-        decision: 'ACCEPT',
-        score: 9,
-        reasons: [
-          { type: 'complete', text: 'tous les détails sont présents' },
-          { type: 'accurate', text: 'références et dates correctes' },
-          { type: 'actionable', text: 'question de relance claire' },
-        ],
-      },
-    },
-    {
-      phase: 'accepted-judge',
-      title: 'Judge → Orchestrator (ACCEPT, feu vert)',
-      arrows: ['s8-arr-12'], labels: ['s8-lbl-12'],
-      activations: ['s8-act-orch', 's8-act-judge-2'],
-      tryNum: 2,
-      tryStatus: { 2: 'accepted' },
-    },
-    {
-      phase: 'final',
-      title: 'Orchestrator → User (réponse validée)',
-      arrows: ['s8-arr-13'], labels: ['s8-lbl-13'],
-      activations: ['s8-act-orch'],
-      tryNum: 2,
-    },
+    { phase: "user", title: "User → Orchestrateur (demande)", arrows: ["s8-arr-1"], labels: ["s8-lbl-1"], activations: ["s8-act-orch"] },
+    { phase: "req-llm", title: "Orchestrateur · LLM décide d’appeler l’Agent Voyage", arrows: ["s8-arr-2"], labels: ["s8-lbl-2"], activations: ["s8-act-orch"] },
+    { phase: "req-sub", title: "Orchestrateur → Agent Voyage (délègue)", arrows: ["s8-arr-3"], labels: ["s8-lbl-3"], activations: ["s8-act-orch", "s8-act-voyage"], tryStatus: {"1": "pending"} },
+    { phase: "req-llm", title: "Agent Voyage · son LLM génère l’itinéraire", arrows: ["s8-arr-4"], labels: ["s8-lbl-4"], activations: ["s8-act-orch", "s8-act-voyage"] },
+    { phase: "res-sub", title: "Agent Voyage → Orchestrateur (proposition v1)", arrows: ["s8-arr-5"], labels: ["s8-lbl-5"], activations: ["s8-act-orch", "s8-act-voyage"], draft: {"try": 1, "text": "Jour 1 : Tour Eiffel, Louvre, Tour Eiffel. Jour 2 : Louvre."} },
+    { phase: "req-llm", title: "Orchestrateur · LLM décide d’appeler l’Agent Juge", arrows: ["s8-arr-6"], labels: ["s8-lbl-6"], activations: ["s8-act-orch", "s8-act-voyage"] },
+    { phase: "req-judge", title: "Orchestrateur → Agent Juge (soumet v1)", arrows: ["s8-arr-7"], labels: ["s8-lbl-7"], activations: ["s8-act-juge", "s8-act-orch", "s8-act-voyage"] },
+    { phase: "req-llm-judge", title: "Agent Juge · son LLM analyse la cohérence", arrows: ["s8-arr-8"], labels: ["s8-lbl-8"], activations: ["s8-act-juge", "s8-act-orch", "s8-act-voyage"] },
+    { phase: "rejected-judge", title: "Agent Juge → Orchestrateur (REJET + remarques)", arrows: ["s8-arr-9"], labels: ["s8-lbl-9"], activations: ["s8-act-juge", "s8-act-orch", "s8-act-voyage"], tryStatus: {"1": "rejected"}, verdict: {"decision": "REJECT", "score": 4, "criteres": [{"label": "Doublons", "etat": "Tour Eiffel & Louvre répétés", "ok": false}, {"label": "Ordre logique", "etat": "visites incohérentes", "ok": false}, {"label": "Durée réaliste", "etat": "jour 2 trop léger", "ok": false}], "feedback": "Supprime les doublons (Tour Eiffel, Louvre), équilibre les 2 jours et regroupe les visites par quartier."} },
+    { phase: "req-sub", title: "Orchestrateur → Agent Voyage (régénère avec le feedback)", arrows: ["s8-arr-10"], labels: ["s8-lbl-10"], activations: ["s8-act-juge", "s8-act-orch", "s8-act-voyage"], tryStatus: {"2": "pending"} },
+    { phase: "req-llm", title: "Agent Voyage · son LLM corrige l’itinéraire", arrows: ["s8-arr-11"], labels: ["s8-lbl-11"], activations: ["s8-act-juge", "s8-act-orch", "s8-act-voyage"] },
+    { phase: "res-sub", title: "Agent Voyage → Orchestrateur (proposition v2)", arrows: ["s8-arr-12"], labels: ["s8-lbl-12"], activations: ["s8-act-juge", "s8-act-orch", "s8-act-voyage"], draft: {"try": 2, "text": "Jour 1 : Louvre (matin), Île de la Cité & Notre-Dame, Quartier Latin. Jour 2 : Tour Eiffel, croisière sur la Seine, Montmartre & Sacré-Cœur."} },
+    { phase: "req-judge", title: "Orchestrateur → Agent Juge (soumet v2)", arrows: ["s8-arr-13"], labels: ["s8-lbl-13"], activations: ["s8-act-juge", "s8-act-orch", "s8-act-voyage"] },
+    { phase: "req-llm-judge", title: "Agent Juge · son LLM analyse la cohérence", arrows: ["s8-arr-14"], labels: ["s8-lbl-14"], activations: ["s8-act-juge", "s8-act-orch", "s8-act-voyage"] },
+    { phase: "accepted-judge", title: "Agent Juge → Orchestrateur (VALIDÉ)", arrows: ["s8-arr-15"], labels: ["s8-lbl-15"], activations: ["s8-act-juge", "s8-act-orch", "s8-act-voyage"], tryStatus: {"2": "accepted"}, verdict: {"decision": "ACCEPT", "score": 9, "criteres": [{"label": "Doublons", "etat": "aucun", "ok": true}, {"label": "Ordre logique", "etat": "cohérent (par quartier)", "ok": true}, {"label": "Durée réaliste", "etat": "2 jours équilibrés", "ok": true}]} },
+    { phase: "final", title: "Orchestrateur → User (itinéraire validé)", arrows: ["s8-arr-16"], labels: ["s8-lbl-16"], activations: ["s8-act-juge", "s8-act-orch", "s8-act-voyage"] },
   ];
 
   let s8State = { step: -1, playing: false, speed: 1, timer: null };
@@ -8877,9 +9190,14 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
     s8ScoreValue.className = 's8-score-value ' + dec;
     s8ScoreValue.textContent = currentVerdict.score;
     let html = '';
-    currentVerdict.reasons.forEach(r => {
-      html += `<span class="reason ${dec}-r"><span class="tag">${r.type}</span>: ${r.text}</span>`;
+    currentVerdict.criteres.forEach(cr => {
+      const cls = cr.ok ? 'ok' : 'ko';
+      const mark = cr.ok ? '\u2713' : '\u2717';
+      html += `<span class="s8-crit ${cls}"><span class="s8-crit-mark">${mark}</span> ${cr.label} : <span class="s8-crit-state">${cr.etat}</span></span>`;
     });
+    if (currentVerdict.feedback) {
+      html += `<span class="s8-feedback"><span class="s8-feedback-tag">feedback &rarr; orchestrateur</span>${currentVerdict.feedback}</span>`;
+    }
     s8Reasons.innerHTML = html;
   }
 
@@ -8908,7 +9226,7 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
       } else if (status[n] === 'rejected') {
         item.classList.add('rejected');
         statusEl.textContent = 'REJECT';
-        detailEl.textContent = 'score 3/10';
+        detailEl.textContent = 'score 4/10';
       } else if (status[n] === 'accepted') {
         item.classList.add('accepted');
         statusEl.textContent = 'ACCEPT';
@@ -9137,7 +9455,15 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
       state: 'done',
       role: "3 filières distinctes : canette aluminium → bac jaune (emballages), bouteille en verre → bac à verre, piles AAA → point de collecte (déchets dangereux, jamais dans un bac).",
       input: { labels: ['canette aluminium', 'piles AAA', 'bouteille en verre'] },
-      output: { bins: ['bac jaune', 'point de collecte', 'bac à verre'], count: 3, confidence: 0.91 },
+      output: {
+        bins: [
+          { name: 'bac jaune', items: ['canette aluminium'] },
+          { name: 'point de collecte', items: ['piles AAA'] },
+          { name: 'bac à verre', items: ['bouteille en verre'] }
+        ],
+        count: 3,
+        confidence: 0.91
+      },
       edges: { 1: 'done', 2: 'done', 3: 'done', 4: 'active' },
       mongoEdges: { 'q-down': 'done', 'q-up': 'done' },
       nodeStates: { 1: 'done', 2: 'done', 3: 'done', 4: 'pending', 5: 'pending' },
@@ -9150,7 +9476,14 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
       title: 'DBSave',
       state: 'running',
       role: "Enregistre les 3 nouvelles classifications en base pour ne plus relancer l'IA dessus.",
-      input: { docs: 3, collection: 'tri_knowledge' },
+      input: {
+        collection: 'tri_knowledge',
+        documents: [
+          { label: 'canette aluminium', bin: 'bac jaune' },
+          { label: 'piles AAA', bin: 'point de collecte' },
+          { label: 'bouteille en verre', bin: 'bac à verre' }
+        ]
+      },
       output: null,
       edges: { 1: 'done', 2: 'done', 3: 'done', 4: 'done' },
       mongoEdges: { 'q-down': 'done', 'q-up': 'done', 's-down': 'active' },
@@ -9165,7 +9498,14 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
       title: 'DBSave',
       state: 'done',
       role: "Les 3 connaissances sont persistées. La base passe de 0 à 3 documents.",
-      input: { docs: 3, collection: 'tri_knowledge' },
+      input: {
+        collection: 'tri_knowledge',
+        documents: [
+          { label: 'canette aluminium', bin: 'bac jaune' },
+          { label: 'piles AAA', bin: 'point de collecte' },
+          { label: 'bouteille en verre', bin: 'bac à verre' }
+        ]
+      },
       output: { saved: 3, collection: 'tri_knowledge' },
       edges: { 1: 'done', 2: 'done', 3: 'done', 4: 'done', 5: 'active' },
       mongoEdges: { 'q-down': 'done', 'q-up': 'done', 's-down': 'done' },
@@ -9180,7 +9520,13 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
       title: 'Consolidator',
       state: 'running',
       role: "Compose le message final : une consigne de tri par déchet détecté.",
-      input: { classifications: 3 },
+      input: {
+        classifications: [
+          { item: 'canette aluminium', bin: 'bac jaune' },
+          { item: 'bouteille en verre', bin: 'bac à verre' },
+          { item: 'piles AAA', bin: 'point de collecte' }
+        ]
+      },
       output: null,
       edges: { 1: 'done', 2: 'done', 3: 'done', 4: 'done', 5: 'done' },
       mongoEdges: { 'q-down': 'done', 'q-up': 'done', 's-down': 'done' },
@@ -9195,8 +9541,23 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
       title: 'Consolidator',
       state: 'done',
       role: "Message prêt : 3 consignes regroupées pour l'utilisateur.",
-      input: { classifications: 3 },
-      output: { user_message: 'Canette aluminium → bac jaune · Bouteille en verre → bac à verre · Piles AAA → point de collecte', icon: '♻️' },
+      input: {
+        classifications: [
+          { item: 'canette aluminium', bin: 'bac jaune' },
+          { item: 'bouteille en verre', bin: 'bac à verre' },
+          { item: 'piles AAA', bin: 'point de collecte' }
+        ]
+      },
+      output: {
+        results: [
+          { item: 'canette aluminium', bin: 'bac jaune' },
+          { item: 'bouteille en verre', bin: 'bac à verre' },
+          { item: 'piles AAA', bin: 'point de collecte' }
+        ],
+        summary: { total_items: 3, confidence: 0.91 },
+        user_message: '3 objets identifiés et classés avec succès.',
+        icon: '♻️'
+      },
       edges: { 1: 'done', 2: 'done', 3: 'done', 4: 'done', 5: 'done', 6: 'active' },
       mongoEdges: { 'q-down': 'done', 'q-up': 'done', 's-down': 'done' },
       nodeStates: { 1: 'done', 2: 'done', 3: 'done', 4: 'done', 5: 'done' },
@@ -9269,20 +9630,31 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
 
   function s9FormatJson(obj) {
     if (obj === null || obj === undefined) return '—';
-    let html = '{\n';
-    const entries = Object.entries(obj);
-    entries.forEach(([k, v], i) => {
-      const comma = i < entries.length - 1 ? ',' : '';
-      let vHtml;
-      if (typeof v === 'string') vHtml = '<span class="v-str">"' + v + '"</span>';
-      else if (typeof v === 'boolean') vHtml = '<span class="v-bool">' + v + '</span>';
-      else if (typeof v === 'number') vHtml = '<span class="v-num">' + v + '</span>';
-      else if (Array.isArray(v)) vHtml = '<span class="v-str">' + JSON.stringify(v) + '</span>';
-      else vHtml = '<span class="v-str">' + JSON.stringify(v) + '</span>';
-      html += '  <span class="k">' + k + '</span>: ' + vHtml + comma + '\n';
-    });
-    html += '}';
-    return html;
+    function ind(n) { return '  '.repeat(n); }
+    function fmtVal(v, depth) {
+      if (typeof v === 'string') return '<span class="v-str">"' + v + '"</span>';
+      if (typeof v === 'boolean') return '<span class="v-bool">' + v + '</span>';
+      if (typeof v === 'number') return '<span class="v-num">' + v + '</span>';
+      if (Array.isArray(v)) {
+        if (v.length === 0) return '[]';
+        var prim = v.every(function (x) { return x === null || typeof x !== 'object'; });
+        if (prim) return '[' + v.map(function (x) { return fmtVal(x, depth); }).join(', ') + ']';
+        var items = v.map(function (x) { return ind(depth + 1) + fmtVal(x, depth + 1); }).join(',\n');
+        return '[\n' + items + '\n' + ind(depth) + ']';
+      }
+      if (typeof v === 'object') return fmtObj(v, depth);
+      return '<span class="v-str">' + String(v) + '</span>';
+    }
+    function fmtObj(o, depth) {
+      var entries = Object.entries(o);
+      if (entries.length === 0) return '{}';
+      var lines = entries.map(function (pair, i) {
+        var comma = i < entries.length - 1 ? ',' : '';
+        return ind(depth + 1) + '<span class="k">' + pair[0] + '</span>: ' + fmtVal(pair[1], depth + 1) + comma;
+      });
+      return '{\n' + lines.join('\n') + '\n' + ind(depth) + '}';
+    }
+    return fmtObj(obj, 0);
   }
 
   function s9Render() {
@@ -10149,5 +10521,104 @@ Réponse : <span class="b">{</span> <span class="k">"eligible"</span>: <span cla
 })();
 </script>
 
+<script>
+(function () {
+  const stage = document.getElementById('sag-stage');
+  const trait = document.getElementById('sag-trait');
+  if (!stage || !trait) return;
+  const bricks = Array.from(stage.querySelectorAll('.sag-brick'));
+  const links = Array.from(stage.querySelectorAll('.sag-link'));
+
+  function select(comp) {
+    bricks.forEach(function (b) { b.classList.toggle('active', b.dataset.comp === comp); });
+    links.forEach(function (l) { l.classList.toggle('active', l.dataset.link === comp); });
+  }
+  function clearSel() {
+    bricks.forEach(function (b) { b.classList.remove('active'); });
+    links.forEach(function (l) { l.classList.remove('active'); });
+  }
+  function setReasoning(on) {
+    stage.classList.toggle('is-reasoning', on);
+    trait.classList.toggle('active', on);
+  }
+
+  bricks.forEach(function (b) {
+    b.addEventListener('click', function () { select(b.dataset.comp); });
+    b.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(b.dataset.comp); }
+    });
+  });
+  trait.addEventListener('click', function () { setReasoning(!stage.classList.contains('is-reasoning')); });
+
+  const KEYMAP = { a: 'agent', c: 'llm', m: 'memoire', i: 'instructions', o: 'outils' };
+  document.addEventListener('keydown', function (e) {
+    if (e.target.matches('input, textarea')) return;
+    const active = document.querySelector('.slide.active');
+    if (!active || active.dataset.slide !== 'agent') return;
+    const k = e.key.toLowerCase();
+    if (k === 'r') { e.preventDefault(); setReasoning(!stage.classList.contains('is-reasoning')); return; }
+    const id = KEYMAP[k];
+    if (id) { e.preventDefault(); select(id); }
+  });
+
+  // Réinitialise (schéma centré, rien de sélectionné) à chaque entrée sur la slide
+  let was = false;
+  const obs = new MutationObserver(function () {
+    const active = document.querySelector('.slide.active');
+    const here = !!(active && active.dataset.slide === 'agent');
+    if (here && !was) { clearSel(); setReasoning(false); }
+    was = here;
+  });
+  const host = stage.closest('.slide');
+  if (host) obs.observe(host, { attributes: true, attributeFilter: ['class'] });
+})();
+</script>
+<script>
+// ───────────────────────────────────────────────────────────
+// Navigation clavier ← / → dans les diagrammes (séquence + workflow)
+// Un seul gestionnaire générique, en phase capture (avant la nav globale).
+// Chaque entrée mappe data-slide → boutons préc./suiv. + compteur d'étapes.
+// Aux extrémités (1re ou dernière étape), on laisse passer pour changer de slide.
+// ───────────────────────────────────────────────────────────
+(function () {
+  const SEQ_NAV = {
+    '3':  { prev: 's3-prev',    next: 's3-next',    cur: 's3-step-current',   tot: 's3-step-total' },
+    '4':  { prev: 's4-prev',    next: 's4-next',    cur: 's4-step-current',   tot: 's4-step-total' },
+    '5':  { prev: 'react-prev', next: 'react-next', cur: 'ctrl-step-current', tot: 'ctrl-step-total' },
+    '6':  { prev: 's6-prev',    next: 's6-next',    cur: 's6-step-current',   tot: 's6-step-total' },
+    '7':  { prev: 's7-prev',    next: 's7-next',    cur: 's7-step-current',   tot: 's7-step-total' },
+    '8':  { prev: 's8-prev',    next: 's8-next',    cur: 's8-step-current',   tot: 's8-step-total' },
+    '9':  { prev: 's9-prev',    next: 's9-next',    cur: 's9-step-current',   tot: 's9-step-total' },
+    '10': { prev: 's10-prev',   next: 's10-next',   cur: 's10-step-current',  tot: 's10-step-total' },
+    '11': { prev: 's11-prev',   next: 's11-next',   cur: 's11-step-current',  tot: 's11-step-total' },
+    '12': { prev: 's12-prev',   next: 's12-next',   cur: 's12-step-current',  tot: 's12-step-total' },
+  };
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    if (e.target && e.target.matches && e.target.matches('input, textarea')) return;
+    const active = document.querySelector('.slide.active');
+    if (!active) return;
+    const map = SEQ_NAV[active.dataset.slide];
+    if (!map) return;
+    const curEl = document.getElementById(map.cur);
+    const totEl = document.getElementById(map.tot);
+    if (!curEl || !totEl) return;
+    const cur = parseInt(curEl.textContent, 10);
+    const tot = parseInt(totEl.textContent, 10);
+    if (isNaN(cur) || isNaN(tot)) return;
+    if (e.key === 'ArrowRight') {
+      if (cur < tot) {                       // pas encore à la dernière étape → avancer
+        e.preventDefault(); e.stopImmediatePropagation();
+        const b = document.getElementById(map.next); if (b) b.click();
+      }
+    } else {                                  // ArrowLeft
+      if (cur > 1) {                          // pas à la première étape → reculer
+        e.preventDefault(); e.stopImmediatePropagation();
+        const b = document.getElementById(map.prev); if (b) b.click();
+      }
+    }
+  }, true);
+})();
+</script>
 </body>
 </html>
